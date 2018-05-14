@@ -1,12 +1,24 @@
 <template>
 	<div class="posts">
-		<h1>MESSAGES in {{ latitude }} / {{ longitude }}</h1>
-
-		<tbody v-for="message in messages">
-			<tr>
-				<td>{{ message.text }}</td>
-			</tr>
-		</tbody>
+		<h1>MESSAGES in your area<br>
+		({{ latitude }} / {{ longitude }})</h1>
+		
+		<table class="table table-hover">
+			<thead class="thead-default">
+				<tr>
+					<th>Message</th>
+					<th>Latitude</th>
+					<th>Longitude</th>
+				</tr>
+			</thead>
+			<tbody v-for="message in messages">
+				<tr>
+					<td>{{ message.text }}</td>
+					<td>{{ message.geo[0] }}</td>
+					<td>{{ message.geo[1] }}</td>
+				</tr>
+			</tbody>
+		</table>
 
 	</div>
 </template>
@@ -17,19 +29,16 @@
 	export default {
 		data() {
 			return {
-				//latitude: null,
-				//longitude: null,
-				// LATITUDE and LONGITUDE fixed for test purposes
-				latitude: 30.6060,
-				longitude: -10.2323,
+				latitude: null,
+				longitude: null,
 				messages: []
 			}
 		},
 		mounted() {
-			/*navigator.geolocation.getCurrentPosition(this.onLocation,
+			navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
 																					{ enableHighAccuracy : true });
-*/
+
 			this.getMessages();
 		},
 		methods: {
@@ -40,7 +49,6 @@
 				this.longitude = position.coords.longitude;
 				//console.log("LONGITUDE: " + this.longitude);
 			},
-
 			async getMessages() {
 				const response = await apiAccess.fetchMessages();
 				this.messages = response.data;

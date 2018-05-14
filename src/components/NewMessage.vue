@@ -4,7 +4,7 @@
 
 		<div class="form">
 			<div>
-				<textarea rows="5" cols="20" placeholder="Message text..." v-model="newMessage.text">
+				<textarea rows="10" cols="50" placeholder="Message text..." v-model="newMessage.text">
 				</textarea>
 			</div>
 			<div>
@@ -27,7 +27,19 @@
 				}
 			}
 		},
+		mounted() {
+			navigator.geolocation.getCurrentPosition(this.onLocation,
+																		(error) => console.log(error),
+																		{ enableHighAccuracy : true });
+		},
 		methods: {
+
+			onLocation(position) {
+				this.newMessage.latitude = position.coords.latitude;
+				//console.log("LATITUDE: " + this.latitude);
+				this.newMessage.longitude = position.coords.longitude;
+				//console.log("LONGITUDE: " + this.longitude);
+			},
     	async addMessage() {
     		await apiAccess.addMessage(this.newMessage);
 
