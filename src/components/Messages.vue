@@ -29,15 +29,15 @@
 	export default {
 		data() {
 			return {
-/*				location: [ null, null ],*/
-				location: [ 10.01, 10.01 ],
+				//location: [ null, null ],
+				location: [11, 11],
 				messages: []
 			}
 		},
 		mounted() {
-/*			navigator.geolocation.getCurrentPosition(this.onLocation,
+			navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
-																					{ enableHighAccuracy : true });*/
+																					{ enableHighAccuracy : true });
 
 			this.getMessages();
 		},
@@ -48,7 +48,7 @@
 				this.location[1] = position.coords.longitude;
 			},
 			async getMessages() {
-				const response = await apiAccess.fetchMessages();
+				const response = await apiAccess.fetchMessages(this.location);
 				this.messages = response.data;
 			}
 

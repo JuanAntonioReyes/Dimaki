@@ -4,7 +4,9 @@ var config = require('../config/config.js');
 
 export default {
   fetchMessages(params) {
-		return axios.create({ baseURL: config.apiUrl }).get('api/messages', params);
+  	var urlGet = 'api/messages/' + params[0] + '/' + params[1];
+  	
+		return axios.create({ baseURL: config.apiUrl }).get(urlGet);
   },
   addMessage(params) {
 		return axios.create({ baseURL: config.apiUrl }).post('api/messages', params);
