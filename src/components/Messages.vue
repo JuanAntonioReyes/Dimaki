@@ -1,7 +1,7 @@
 <template>
 	<div class="posts">
 		<h1>MESSAGES in your area<br>
-		({{ latitude }} / {{ longitude }})</h1>
+		({{ location[0] }} / {{ location[1] }})</h1>
 		
 		<table class="table table-hover">
 			<thead class="thead-default">
@@ -29,25 +29,23 @@
 	export default {
 		data() {
 			return {
-				latitude: null,
-				longitude: null,
+/*				location: [ null, null ],*/
+				location: [ 10.01, 10.01 ],
 				messages: []
 			}
 		},
 		mounted() {
-			navigator.geolocation.getCurrentPosition(this.onLocation,
+/*			navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
-																					{ enableHighAccuracy : true });
+																					{ enableHighAccuracy : true });*/
 
 			this.getMessages();
 		},
 		methods: {
 
 			onLocation(position) {
-				this.latitude = position.coords.latitude;
-				//console.log("LATITUDE: " + this.latitude);
-				this.longitude = position.coords.longitude;
-				//console.log("LONGITUDE: " + this.longitude);
+				this.location[0] = position.coords.latitude;
+				this.location[1] = position.coords.longitude;
 			},
 			async getMessages() {
 				const response = await apiAccess.fetchMessages();

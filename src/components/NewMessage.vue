@@ -21,30 +21,27 @@
 		data() {
 			return {
 				newMessage: {
-					latitude: 10,
-					longitude: 10,
-					text: ''
+					text: '',
+					geo: [ 10, 10 ]
 				}
 			}
 		},
 		mounted() {
-			navigator.geolocation.getCurrentPosition(this.onLocation,
+/*			navigator.geolocation.getCurrentPosition(this.onLocation,
 																		(error) => console.log(error),
-																		{ enableHighAccuracy : true });
+																		{ enableHighAccuracy : true });*/
 		},
 		methods: {
 
 			onLocation(position) {
-				this.newMessage.latitude = position.coords.latitude;
-				//console.log("LATITUDE: " + this.latitude);
-				this.newMessage.longitude = position.coords.longitude;
-				//console.log("LONGITUDE: " + this.longitude);
+				this.newMessage.geo[0] = position.coords.latitude;
+				this.newMessage.geo[1] = position.coords.longitude;
 			},
     	async addMessage() {
-    		await apiAccess.addMessage(this.newMessage);
+				await apiAccess.addMessage(this.newMessage);
 
-      	this.$router.push({ name: 'messagesLink' })
-    	}
+				//this.$router.push({ name: 'messagesLink' })
+			}
   }
 }
 </script>
