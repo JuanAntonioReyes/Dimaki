@@ -17,16 +17,19 @@
 	export default {
 		data() {
 			return {
-				latitude: null,
-				longitude: null,
+				//latitude: null,
+				//longitude: null,
+				// LATITUDE and LONGITUDE fixed for test purposes
+				latitude: 30.6060,
+				longitude: -10.2323,
 				messages: []
 			}
 		},
 		mounted() {
-			navigator.geolocation.getCurrentPosition(this.onLocation,
+			/*navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
 																					{ enableHighAccuracy : true });
-
+*/
 			this.getMessages();
 		},
 		methods: {
