@@ -8,8 +8,8 @@
 
 			</b-col>
 			<b-col>
-				<input type="checkbox" v-model="test">
-				TEST LATITUDE <input type="text" v-model="location[0]"><br>
+
+				TEST LATITUDE <input type="text" id="location" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
 				<table class="table table-hover">
 					<thead class="thead-default">
@@ -41,7 +41,6 @@
 			return {
 				//location: [ null, null ],
 				location: [ 0, 0 ],
-				test: true,
 				messages: [],
 				mapData: {
 					map: null,
@@ -56,7 +55,6 @@
 																					(error) => console.log(error),
 																					{ enableHighAccuracy : true });
 
-			//this.getMessages();
 			this.initMap();
 			//this.updateMap();
 			//console.log("LOCATION AT mounted() END: " + this.location);
