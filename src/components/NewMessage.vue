@@ -1,6 +1,8 @@
 <template>
 	<div class="posts">
-		<h1>Add Message</h1>
+		<h1>Add Message from {{ newMessage.geo[0] }} / {{ newMessage.geo[1] }}</h1>
+		TEST LATITUDE <input type="text" v-model="newMessage.geo[0]">
+		TEST LONGITUDE <input type="text" v-model="newMessage.geo[1]">
 
 		<div class="form">
 			<div>
@@ -27,9 +29,9 @@
 			}
 		},
 		mounted() {
-/*			navigator.geolocation.getCurrentPosition(this.onLocation,
+			navigator.geolocation.getCurrentPosition(this.onLocation,
 																		(error) => console.log(error),
-																		{ enableHighAccuracy : true });*/
+																		{ enableHighAccuracy : true });
 		},
 		methods: {
 
