@@ -16,8 +16,8 @@
 			<tbody v-for="message in messages">
 				<tr>
 					<td>{{ message.text }}</td>
-					<td>{{ message.geo[0] }}</td>
-					<td>{{ message.geo[1] }}</td>
+					<td>{{ message.location[0] }}</td>
+					<td>{{ message.location[1] }}</td>
 				</tr>
 			</tbody>
 		</table>
