@@ -1,8 +1,8 @@
 <template>
 	<div class="posts">
 		<h1>Add Message from {{ newMessage.geo[0] }} / {{ newMessage.geo[1] }}</h1>
-		TEST LATITUDE <input type="text" v-model="newMessage.geo[0]">
-		TEST LONGITUDE <input type="text" v-model="newMessage.geo[1]">
+		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
+		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]">
 
 		<div class="form">
 			<div>
@@ -23,12 +23,24 @@
 		data() {
 			return {
 				newMessage: {
-					text: '',
-					geo: [ 10, 10 ]
+					text: null,
+					location: [],
+					date: null,
+					from: null,
+					public: false,
+					to: [],
+					duration: null
 				}
 			}
 		},
 		mounted() {
+			this.newMessage.text = '';
+			this.newMessage.date = Date.now();
+			this.newMessage.from = "User1";
+			this.newMessage.public = true;
+			this.newMessage.to = [];
+			this.newMessage.duration = 1000;
+
 			navigator.geolocation.getCurrentPosition(this.onLocation,
 																		(error) => console.log(error),
 																		{ enableHighAccuracy : true });
@@ -36,8 +48,8 @@
 		methods: {
 
 			onLocation(position) {
-				this.newMessage.geo[0] = position.coords.latitude;
-				this.newMessage.geo[1] = position.coords.longitude;
+				this.newMessage.location[0] = position.coords.longitude;
+				this.newMessage.location[1] = position.coords.latitude;
 			},
     	async addMessage() {
 				await apiAccess.addMessage(this.newMessage);

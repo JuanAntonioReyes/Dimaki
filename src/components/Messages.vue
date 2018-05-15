@@ -66,7 +66,7 @@
 				//console.log("--location watch called--");
 				this.getMessages();
 			}
-  	}
+		}
 	}
 </script>
 
