@@ -4,7 +4,7 @@
 		({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1>
 		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
 		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br>
-		TEST USER <input type="text" v-model="newMessage.user"><br>
+		TEST USER <input type="text" v-model="newMessage.from"><br>
 		TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate">
 
 		<div class="form">
@@ -76,7 +76,7 @@
     	async addMessage() {
 				await apiAccess.addMessage(this.newMessage);
 
-				//this.$router.push({ name: 'messagesLink' })
+				this.$router.push({ name: 'messagesLink' })
 			}
   }
 }
