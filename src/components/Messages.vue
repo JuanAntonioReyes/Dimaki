@@ -65,10 +65,7 @@
 
 			//this.updateMap();
 			//console.log("LOCATION AT mounted() END: " + this.location);
-		},
-		updated() {
-			this.updateMap();
-		},
+		}
 		methods: {
 
 			// Ugly solution for showing correctly the location data at start
@@ -77,7 +74,10 @@
 				// Very unlikely, but it might happen, who knows
 				if (this.location[0] != 0) {
 					this.$forceUpdate();
+
+					this.updateMap();
 					this.getMessages();
+					
 					clearInterval(checkStartLocationID); 
 				}
 			},
@@ -148,6 +148,7 @@
 			location: function (val) {
 				//console.log("--location watch called--");
 				this.getMessages();
+				this.updateMap();
 			}
 		}
 	}
