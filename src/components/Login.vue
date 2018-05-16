@@ -10,6 +10,9 @@
 				<button @click="login">Login</button>
 			</div>
 		</div>
+		<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
+			You don't have an account? <a href="">Register now!</a>
+		</router-link>
 	</div>
 </template>
 
@@ -27,7 +30,7 @@
 		},
 		methods: {
     	async login() {
-				var response = await apiAccess.login(this.loginData);
+				var response = await apiAccess.loginUser(this.loginData);
 
 				// Before this, I should check if the browser supports localStorage
 				localStorage.setItem("userToken", response.data.token);

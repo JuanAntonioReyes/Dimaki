@@ -29,7 +29,10 @@
 		},
 		methods: {
     	async registerUser() {
-				await apiAccess.registerUser(this.newUser);
+				var response = await apiAccess.registerUser(this.newUser);
+
+				// Before this, I should check if the browser supports localStorage
+				localStorage.setItem("userToken", response.data.token);
 
 				this.$router.push({ name: 'messagesLink' });
 			}

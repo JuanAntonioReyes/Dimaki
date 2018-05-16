@@ -80,11 +80,11 @@
 				if (userToken) {
 					await apiAccess.addMessage(this.newMessage);
 
-					console.log(userToken);
+					//console.log("TOKEN: " + userToken);
 
 					this.$router.push({ name: 'messagesLink' });
 				} else {
-					console.log('NO USER TOKEN - Going to Login');
+					console.log("NO USER TOKEN - Going to Login");
 
 					this.$router.push({ name: 'loginLink' });
 				}

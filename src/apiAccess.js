@@ -13,9 +13,9 @@ export default {
 		return axiosObject.post('api/messages', params);
 	},
 	registerUser(params) {
-		return axiosObject.post('api/register', params);
+		return axiosObject.post('api/registerUser', params);
 	},
-	login(params) {
-		return axiosObject.post('api/login', params);
+	loginUser(params) {
+		return axiosObject.post('api/loginUser', params);
 	}
 }
