@@ -9,7 +9,7 @@
 			</b-col>
 			<b-col>
 
-				TEST LATITUDE <input type="text" id="location" v-model="location[0]"><br>
+				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
 				<table class="table table-hover">
 					<thead class="thead-default">
@@ -36,6 +36,8 @@
 <script>
 	import apiAccess from '../apiAccess.js';
 
+	var checkStartLocationID;
+
 	export default {
 		data() {
 			return {
@@ -56,6 +58,11 @@
 																					{ enableHighAccuracy : true });
 
 			this.initMap();
+
+			// TODO: FIX THIS CORRECTLY!
+			// Ugly solution for showing correctly the location data at start
+			checkStartLocationID = setInterval(this.checkValues, 1000);			
+
 			//this.updateMap();
 			//console.log("LOCATION AT mounted() END: " + this.location);
 		},
@@ -63,6 +70,16 @@
 			this.updateMap();
 		},
 		methods: {
+
+			// Ugly solution for showing correctly the location data at start
+			checkValues() { 
+				// If you are exactly at 0, 0 when the app starts, this will fail
+				// Very unlikely, but it might happen, who knows
+				if (this.location[0] != 0) {
+					this.$forceUpdate();
+					clearInterval(checkStartLocationID); 
+				}
+			},
 
 			onLocation(position) {
 				//console.log("LOCATION AT onLocation() START: " + this.location);
