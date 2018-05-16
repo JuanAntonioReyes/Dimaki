@@ -8,7 +8,10 @@
 					<a href="" class="nav-link">Messages</a>
 				</router-link>
 				<router-link :to="{ name: 'newMessageLink' }" tag="li" class="nav-item">
-					<a href="" class="nav-link">New message</a>
+					<a href="" class="nav-link">New message!</a>
+				</router-link>
+				<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
+					<a href="" class="nav-link">Register</a>
 				</router-link>
 			</ul>
 		</nav>
