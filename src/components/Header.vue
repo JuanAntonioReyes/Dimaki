@@ -13,6 +13,9 @@
 				<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
 					<a href="" class="nav-link">Register</a>
 				</router-link>
+				<router-link :to="{ name: 'loginLink' }" tag="li" class="nav-item">
+					<a href="" class="nav-link">Login</a>
+				</router-link>
 			</ul>
 		</nav>
 	</header>

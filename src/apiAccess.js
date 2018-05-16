@@ -1,17 +1,21 @@
 import axios from 'axios';
 
 var config = require('../config/config.js');
+var axiosObject = axios.create({ baseURL: config.apiUrl });
 
 export default {
 	fetchMessages(params) {
 		var urlGet = 'api/messages/' + params[0] + '/' + params[1];
 		
-		return axios.create({ baseURL: config.apiUrl }).get(urlGet);
+		return axiosObject.get(urlGet);
 	},
 	addMessage(params) {
-		return axios.create({ baseURL: config.apiUrl }).post('api/messages', params);
+		return axiosObject.post('api/messages', params);
 	},
 	registerUser(params) {
-		return axios.create({ baseURL: config.apiUrl }).post('api/register', params);
+		return axiosObject.post('api/register', params);
+	},
+	login(params) {
+		return axiosObject.post('api/login', params);
 	}
 }

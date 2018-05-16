@@ -4,7 +4,7 @@
 		<div class="form">
 			<div>
 				Name: <input type="text" v-model="newUser.name"><br>
-				Password: <input type="text" v-model="newUser.pass"><br>
+				Password: <input type="password" v-model="newUser.pass"><br>
 				e-mail: <input type="text" v-model="newUser.email"><br>
 			</div>
 			<div>
