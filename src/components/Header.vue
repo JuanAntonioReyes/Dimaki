@@ -18,6 +18,7 @@
 						<a href="" class="nav-link">Login</a>
 					</router-link>
 				</strong>
+				</strong>
 			</ul>
 		</nav>
 	</header>
@@ -31,16 +32,13 @@
 				loggedUser: false
 			}
 		},
-		mounted() {
+		created() {
 			if (localStorage.getItem("userToken")) {
 				this.loggedUser = true;
 			}
-			/*if (localStorage.getItem("userToken")) {
-				this.loggedUser = true;
-			}*/
 		},
 		methods: {
-			logout() { 
+			logout() {
 				localStorage.removeItem("userToken");
 				console.log("LOGGED OUT");
 			}
