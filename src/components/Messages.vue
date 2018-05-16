@@ -77,6 +77,7 @@
 				// Very unlikely, but it might happen, who knows
 				if (this.location[0] != 0) {
 					this.$forceUpdate();
+					this.getMessages();
 					clearInterval(checkStartLocationID); 
 				}
 			},
