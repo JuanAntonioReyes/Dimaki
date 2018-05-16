@@ -53,7 +53,10 @@
 		},
 		mounted() {
 			//console.log("LOCATION AT mounted() START: " + this.location);
-			navigator.geolocation.watchPosition(this.onLocation,
+	
+			// getCurrentPosition for testing, for real use use watchPosition
+			//navigator.geolocation.watchPosition(this.onLocation,
+			navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
 																					{ enableHighAccuracy : true });
 
@@ -64,8 +67,9 @@
 			checkStartLocationID = setInterval(this.checkValues, 1000);			
 
 			//this.updateMap();
+	
 			//console.log("LOCATION AT mounted() END: " + this.location);
-		}
+		},
 		methods: {
 
 			// Ugly solution for showing correctly the location data at start
@@ -77,7 +81,7 @@
 
 					this.updateMap();
 					this.getMessages();
-					
+
 					clearInterval(checkStartLocationID); 
 				}
 			},
