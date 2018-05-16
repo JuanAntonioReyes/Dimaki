@@ -29,9 +29,10 @@
     	async login() {
 				var response = await apiAccess.login(this.loginData);
 
-				console.log(response.data.token);
+				// Before this, I should check if the browser supports localStorage
+				localStorage.setItem("userToken", response.data.token);
 
-				this.$router.push({ name: 'messagesLink' })
+				this.$router.push({ name: 'messagesLink' });
 			}
   }
 }

@@ -74,9 +74,21 @@
 				this.newMessage.location[1] = position.coords.longitude;
 			},
     	async addMessage() {
-				await apiAccess.addMessage(this.newMessage);
 
-				this.$router.push({ name: 'messagesLink' })
+    		var userToken = localStorage.getItem("userToken");
+
+				if (userToken) {
+					await apiAccess.addMessage(this.newMessage);
+
+					console.log(userToken);
+
+					this.$router.push({ name: 'messagesLink' });
+				} else {
+					console.log('NO USER TOKEN - Going to Login');
+
+					this.$router.push({ name: 'loginLink' });
+				}
+
 			}
   }
 }

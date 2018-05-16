@@ -31,7 +31,7 @@
     	async registerUser() {
 				await apiAccess.registerUser(this.newUser);
 
-				this.$router.push({ name: 'messagesLink' })
+				this.$router.push({ name: 'messagesLink' });
 			}
   }
 }
