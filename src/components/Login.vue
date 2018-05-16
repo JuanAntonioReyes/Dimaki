@@ -27,7 +27,9 @@
 		},
 		methods: {
     	async login() {
-				await apiAccess.login(this.loginData);
+				var response = await apiAccess.login(this.loginData);
+
+				console.log(response.data.token);
 
 				this.$router.push({ name: 'messagesLink' })
 			}
