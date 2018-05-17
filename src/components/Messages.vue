@@ -20,6 +20,20 @@
 		<b-row>
 			<b-col sm="12" md="6">
 
+<!-- DISMISABLE ALERT TEST -->
+				<b-alert variant="info" dismissible :show="showDismissibleAlert"
+					@dismissed="showDismissibleAlert=false">
+
+					Message AT: (LAT / LON)<br><br>
+
+					<div class="text-center">(MESSAGE TEXT)</div>
+					<div class="text-right">- (USERNAME) -</div>
+	
+		    </b-alert>
+
+		    <b-button @click="selectMessage">TEST</b-button>
+<!-- / DISMISABLE ALERT TEST -->
+
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
 				<table class="table table-hover">
@@ -40,7 +54,7 @@
 				</table>
 
 			</b-col>
-			
+
 			<b-col sm="12" md="6">
 				<div id="map"></div>
 			</b-col>
@@ -96,7 +110,8 @@
 					map: null,
 					userMarker: null,
 					messagesMarkers: []
-				}
+				},
+				showDismissibleAlert: false
 			}
 		},
 		mounted() {
@@ -194,6 +209,16 @@
 
 				this.mapData.userMarker.setPosition(newPoint);
 				this.mapData.map.setCenter(newPoint);
+			},
+			selectMessage() {
+				this.showDismissibleAlert = !this.showDismissibleAlert;
+
+				var marker = this.mapData.messagesMarkers[0];
+				if (this.showDismissibleAlert) {
+					marker.setAnimation(google.maps.Animation.BOUNCE);
+				} else {
+					marker.setAnimation(null);
+				};
 			}
 
 		},
