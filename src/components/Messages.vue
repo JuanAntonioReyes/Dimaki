@@ -1,5 +1,17 @@
 <template>
 	<b-container class="messages">
+		<b-row class="text-center">
+
+			<b-col sm="12">
+				<router-link :to="{ name: 'newMessageLink' }">
+					<b-button size="lg" variant="success">
+						Leave a new message here!
+					</b-button>
+				</router-link>
+			</b-col>
+
+		</b-row>
+
 		<b-row>
 			<b-col md="6">
 
