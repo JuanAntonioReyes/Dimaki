@@ -66,7 +66,7 @@
 			// Ugly solution for showing correctly the location data at start
 			checkStartLocationID = setInterval(this.checkValues, 1000);			
 
-			//this.updateMap();
+			this.updateMap();
 	
 			//console.log("LOCATION AT mounted() END: " + this.location);
 		},
@@ -98,7 +98,7 @@
 				const response = await apiAccess.fetchMessages(this.location);
 				this.messages = response.data;
 
-/*				// Generate messages markers for the map
+				// Generate messages markers for the map
 				this.mapData.messagesMarkers = [];
 				var newMessageMarker;
 
@@ -114,13 +114,13 @@
 					});
 
 					this.mapData.messagesMarkers.push(newMessageMarker);
-				});*/
+				});
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
 			initMap() {
 				document.getElementById('map').textContent = "The map goes here";
-/*				var uluru = {lat: Number(this.location[0]), lng: Number(this.location[1])};
+				var uluru = {lat: Number(this.location[0]), lng: Number(this.location[1])};
 				
 				this.mapData.map = new google.maps.Map(document.getElementById('map'), {
 					zoom: 18,
@@ -130,7 +130,7 @@
 				this.mapData.userMarker = new google.maps.Marker({
 					position: uluru,
 					map: this.mapData.map
-				});*/
+				});
 
 /*				var circle = new google.maps.Circle({
 					map: this.mapData.map,
@@ -142,10 +142,10 @@
 				circle.bindTo('center', this.mapData.userMarker, 'position');*/
       },
       updateMap() {
-				/*var newPoint = new google.maps.LatLng(this.location[0], this.location[1]);
+				var newPoint = new google.maps.LatLng(this.location[0], this.location[1]);
 
 				this.mapData.userMarker.setPosition(newPoint);
-				this.mapData.map.setCenter(newPoint);*/
+				this.mapData.map.setCenter(newPoint);
 			}
 
 		},
