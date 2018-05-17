@@ -1,18 +1,53 @@
 <template>
-	<b-container class="messages">
+	<b-container class="messages mt-4">
 		<b-row class="text-center">
 
-			<b-col sm="12">
+			<b-col sm="12" class="mb-4">
+
+				<!-- Remove the Number() when the testing inputs are removed -->
+				<h2>You are at {{ Number(location[0]).toFixed(6) }} / {{ Number(location[1]).toFixed(6) }}</h2>
+
 				<router-link :to="{ name: 'newMessageLink' }">
 					<b-button size="lg" variant="success">
 						Leave a new message here!
 					</b-button>
 				</router-link>
+
 			</b-col>
 
 		</b-row>
 
 		<b-row>
+			<b-col sm="12" md="6">
+
+				TEST LATITUDE <input type="text" v-model="location[0]"><br>
+				TEST LONGITUDE <input type="text" v-model="location[1]">
+				<table class="table table-hover">
+					<thead class="thead-default">
+						<tr>
+							<th>Message</th>
+							<th>Latitude</th>
+							<th>Longitude</th>
+						</tr>
+					</thead>
+					<tbody v-for="message in messages">
+						<tr>
+							<td>{{ message.text }}</td>
+							<td>{{ message.location[0] }}</td>
+							<td>{{ message.location[1] }}</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</b-col>
+			
+			<b-col sm="12" md="6">
+				<div id="map"></div>
+			</b-col>
+			
+		</b-row>
+
+<!-- 		<b-row>
 			<b-col md="6">
 
 				<h2>({{ location[0] }} / {{ location[1] }})</h2>
@@ -41,7 +76,8 @@
 				</table>
 
 			</b-col>
-		</b-row>
+		</b-row> -->
+
 	</b-container>		
 </template>
 
