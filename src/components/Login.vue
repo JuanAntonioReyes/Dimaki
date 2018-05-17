@@ -3,7 +3,7 @@
 		<h1>Login</h1>
 		<div class="form">
 			<div>
-				e-mail: <input type="text" v-model="loginData.email"><br>
+				Username: <input type="text" v-model="loginData.name"><br>
 				Password: <input type="password" v-model="loginData.pass"><br>
 			</div>
 			<div>
@@ -23,7 +23,7 @@
 		data() {
 			return {
 				loginData: {
-					email: null,
+					name: null,
 					pass: null
 				}
 			}

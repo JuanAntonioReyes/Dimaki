@@ -42,9 +42,10 @@
 			}
 		},
 		mounted() {
+			this.getUser();
+
 			this.newMessage.text = '';
 			this.newMessage.date = Date.now();
-			this.newMessage.from = "User 1";
 			this.newMessage.public = true;
 			this.newMessage.to = [];
 			this.newMessage.expirationDate = -1;
@@ -72,6 +73,11 @@
 			onLocation(position) {
 				this.newMessage.location[0] = position.coords.latitude;
 				this.newMessage.location[1] = position.coords.longitude;
+			},
+			async getUser() {
+				var response = await apiAccess.getLoggedUser();
+
+				this.newMessage.from = response.data.name;
 			},
 			async addMessage() {
 				await apiAccess.addMessage(this.newMessage);
