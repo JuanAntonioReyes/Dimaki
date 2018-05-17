@@ -1,8 +1,11 @@
 <template>
 	<!-- CHANGE THIS TO BOOTSTRAP VUE NOTATION -->
-	<header class="row">
-		<nav class="navbar navbar-toggleable-md navbar-li">	
-			<a href="/" class="navbar-brand">Dimakí</a>
+	<b-row tag="header">
+		<nav class="navbar navbar-toggleable-md navbar-li">
+
+			<a href="/" class="navbar-brand">
+				<img src="../assets/logoH.png" alt="Dimakí logo" class="logo">
+			</a>
 			<ul class="nav">
 				<router-link :to="{ name: 'messagesLink' }" tag="li" class="nav-item">
 					<a href="" class="nav-link">Messages</a>
@@ -20,8 +23,9 @@
 				</strong>
 				</strong>
 			</ul>
+
 		</nav>
-	</header>
+	</b-row>
 </template>
 
 <script>
@@ -46,3 +50,9 @@
 	}
 
 </script>
+
+<style>
+.logo {
+	width: 10em;
+}
+</style>

@@ -1,13 +1,13 @@
 <template>
 	<b-container class="messages">
 		<b-row>
-			<b-col>
+			<b-col md="6">
 
 				<h2>({{ location[0] }} / {{ location[1] }})</h2>
 				<div id="map"></div>
 
 			</b-col>
-			<b-col>
+			<b-col md="6">
 
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">

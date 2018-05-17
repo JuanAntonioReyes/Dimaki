@@ -19,6 +19,17 @@ const router = new VueRouter({
 	mode: 'history'
 });
 
+router.beforeEach((to,from,next) => {
+	var userToken = localStorage.getItem("userToken");
+	var requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+	if (requiresAuth && !userToken) {
+		next({ name: 'loginLink' });
+	} else {
+		next();
+	}
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

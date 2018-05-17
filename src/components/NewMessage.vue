@@ -73,22 +73,12 @@
 				this.newMessage.location[0] = position.coords.latitude;
 				this.newMessage.location[1] = position.coords.longitude;
 			},
-    	async addMessage() {
+			async addMessage() {
+				await apiAccess.addMessage(this.newMessage);
 
-    		var userToken = localStorage.getItem("userToken");
+				//console.log("TOKEN: " + userToken);
 
-				if (userToken) {
-					await apiAccess.addMessage(this.newMessage);
-
-					//console.log("TOKEN: " + userToken);
-
-					this.$router.push({ name: 'messagesLink' });
-				} else {
-					console.log("NO USER TOKEN - Going to Login");
-
-					this.$router.push({ name: 'loginLink' });
-				}
-
+				this.$router.push({ name: 'messagesLink' });
 			}
   }
 }
