@@ -103,6 +103,11 @@
 	import apiAccess from '../apiAccess.js';
 
 	var checkStartLocationID;
+	var mapData = {
+									map: null,
+									userMarker: null,
+									messagesMarkers: []
+								};
 
 	export default {
 		data() {
@@ -110,11 +115,6 @@
 				//location: [ null, null ],
 				location: [ 0, 0 ],
 				messages: [],
-				mapData: {
-					map: null,
-					userMarker: null,
-					messagesMarkers: []
-				},
 				showDismissibleAlert: false
 			}
 		},
@@ -165,59 +165,68 @@
 				const response = await apiAccess.fetchMessages(this.location);
 				this.messages = response.data;
 
-				// Generate messages markers for the map
-				this.mapData.messagesMarkers = [];
-				var newMessageMarker;
-
-				this.messages.forEach( (message) => {
-					var lat = message.location[0];
-					var lon = message.location[1];
-					var uluru = {lat: lat, lng: lon};
-
-					newMessageMarker = new google.maps.Marker({
-						position: uluru,
-						label: 'M',
-						map: this.mapData.map
-					});
-
-					this.mapData.messagesMarkers.push(newMessageMarker);
-				});
-
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
 			initMap() {
 				document.getElementById('map').textContent = "The map goes here";
 				var uluru = {lat: Number(this.location[0]), lng: Number(this.location[1])};
 				
-				this.mapData.map = new google.maps.Map(document.getElementById('map'), {
+				mapData.map = new google.maps.Map(document.getElementById('map'), {
 					zoom: 18,
 					center: uluru
 				});
 
-				this.mapData.userMarker = new google.maps.Marker({
+				mapData.userMarker = new google.maps.Marker({
 					position: uluru,
-					map: this.mapData.map
+					map: mapData.map
 				});
 
 /*				var circle = new google.maps.Circle({
-					map: this.mapData.map,
+					map: mapData.map,
 					radius: 50,
 					fillColor: '#00AA00',
 					strokeWeight: 2
 				});
 
-				circle.bindTo('center', this.mapData.userMarker, 'position');*/
+				circle.bindTo('center', mapData.userMarker, 'position');*/
       },
       updateMap() {
+      	// Set the user marker position
 				var newPoint = new google.maps.LatLng(this.location[0], this.location[1]);
 
-				this.mapData.userMarker.setPosition(newPoint);
-				this.mapData.map.setCenter(newPoint);
+				mapData.userMarker.setPosition(newPoint);
+				mapData.map.setCenter(newPoint);
+
+				// - Generate messages markers for the map -
+
+				// Delete the previous markers
+/*				mapData.messagesMarkers.forEach( (marker) => {
+					marker.setMap(null);
+				});*/
+				mapData.messagesMarkers.length = 0;
+
+				// Generate the new markers and insert them in the map
+				var newMessageMarker;
+
+				this.messages.forEach( (message) => {
+					var markerLat = message.location[0];
+					var markerLon = message.location[1];
+					var uluru = {lat: markerLat, lng: markerLon};
+
+					newMessageMarker = new google.maps.Marker({
+						position: uluru,
+						label: 'M',
+						map: mapData.map
+					});
+
+					mapData.messagesMarkers.push(newMessageMarker);
+				});
+console.log(mapData.map);
 			},
 			selectMessage() {
 				this.showDismissibleAlert = !this.showDismissibleAlert;
 
-				var marker = this.mapData.messagesMarkers[0];
+				var marker = mapData.messagesMarkers[0];
 				if (this.showDismissibleAlert) {
 					marker.setAnimation(google.maps.Animation.BOUNCE);
 				} else {
