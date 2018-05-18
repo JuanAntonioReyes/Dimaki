@@ -46,9 +46,13 @@
 					</thead>
 					<tbody v-for="message in messages">
 						<tr>
-							<td>{{ message.text.length > 10?(message.text.substring(0, 10) + '...'):message.text }}</td>
-							<td>{{ message.location[0] }}</td>
-							<td>{{ message.location[1] }}</td>
+							<td>
+								{{ message.text.length > 10?
+									(message.text.substring(0, 10) + '...'):
+									message.text }}
+							</td>
+							<td>{{ message.location[0].toFixed(6) }}</td>
+							<td>{{ message.location[1].toFixed(6) }}</td>
 						</tr>
 					</tbody>
 				</table>
