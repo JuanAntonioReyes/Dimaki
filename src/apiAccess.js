@@ -8,10 +8,12 @@ var axiosInstance = axios.create({
 																});
 
 export default {
-	fetchMessages(params) {
+	async fetchMessages(params) {
 		var urlGet = 'api/messages/' + params[0] + '/' + params[1];
 		
-		return axiosInstance.get(urlGet);
+		let result = await axiosInstance.get(urlGet);
+
+		return result;
 	},
 	addMessage(params) {
 		return axiosInstance.post('api/messages', params);

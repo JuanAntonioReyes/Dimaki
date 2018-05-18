@@ -44,7 +44,7 @@
 							<th>Longitude</th>
 						</tr>
 					</thead>
-					<tbody v-for="message in messages">
+					<tbody v-for="message in nearMessages">
 						<tr>
 							<td>
 								{{ message.text.length > 10?
@@ -84,7 +84,7 @@
 							<th>Longitude</th>
 						</tr>
 					</thead>
-					<tbody v-for="message in messages">
+					<tbody v-for="message in nearMessages">
 						<tr>
 							<td>{{ message.text }}</td>
 							<td>{{ message.location[0] }}</td>
@@ -106,7 +106,7 @@
 	var mapData = {
 									map: null,
 									userMarker: null,
-									messagesMarkers: []
+									nearMessagesMarkers: []
 								};
 
 	export default {
@@ -114,7 +114,7 @@
 			return {
 				//location: [ null, null ],
 				location: [ 0, 0 ],
-				messages: [],
+				nearMessages: [],
 				showDismissibleAlert: false
 			}
 		},
@@ -133,7 +133,7 @@
 			// Ugly solution for showing correctly the location data at start
 			checkStartLocationID = setInterval(this.checkValues, 1000);			
 
-			this.updateMap();
+			//this.updateMap();
 	
 			//console.log("LOCATION AT mounted() END: " + this.location);
 		},
@@ -146,8 +146,8 @@
 				if (this.location[0] != 0) {
 					this.$forceUpdate();
 
-					this.updateMap();
 					this.getMessages();
+					this.updateMap();
 
 					clearInterval(checkStartLocationID); 
 				}
@@ -161,9 +161,11 @@
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
-				
+console.log("GETTING MESSAGES");
 				const response = await apiAccess.fetchMessages(this.location);
-				this.messages = response.data;
+				this.nearMessages = response.data;
+
+console.log("MESSAGES: " + this.nearMessages);
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
@@ -200,15 +202,15 @@
 				// - Generate messages markers for the map -
 
 				// Delete the previous markers
-/*				mapData.messagesMarkers.forEach( (marker) => {
+				mapData.nearMessagesMarkers.forEach( (marker) => {
 					marker.setMap(null);
-				});*/
-				mapData.messagesMarkers.length = 0;
+				});
+				mapData.nearMessagesMarkers.length = 0;
 
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
-
-				this.messages.forEach( (message) => {
+console.log("CREATING MARKERS");
+				this.nearMessages.forEach( (message) => {
 					var markerLat = message.location[0];
 					var markerLon = message.location[1];
 					var uluru = {lat: markerLat, lng: markerLon};
@@ -219,14 +221,14 @@
 						map: mapData.map
 					});
 
-					mapData.messagesMarkers.push(newMessageMarker);
+					mapData.nearMessagesMarkers.push(newMessageMarker);
 				});
-console.log(mapData.map);
+console.log("MARKERS: " + mapData.nearMessagesMarkers);
 			},
 			selectMessage() {
 				this.showDismissibleAlert = !this.showDismissibleAlert;
 
-				var marker = mapData.messagesMarkers[0];
+				var marker = mapData.nearMessagesMarkers[0];
 				if (this.showDismissibleAlert) {
 					marker.setAnimation(google.maps.Animation.BOUNCE);
 				} else {
