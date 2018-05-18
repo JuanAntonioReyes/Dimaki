@@ -4,7 +4,7 @@
 
 			<b-col sm="12" class="mb-4">
 
-				<h2>You are at {{ location[0] }} / {{ location[1] }}</h2>
+				<h2>You are at coords {{ location[0] }} / {{ location[1] }}</h2>
 
 				<router-link :to="{ name: 'newMessageLink' }">
 					<b-button size="lg" variant="success">
@@ -19,29 +19,28 @@
 		<b-row>
 			<b-col sm="12" md="6">
 
-<!-- MESSAGE DETAIL TEST -->
+<!-- MESSAGE DETAIL -->
 				<b-alert variant="info" dismissible :show="showMessageDetail"
-					@dismissed="selectMessage">
+					@dismissed="toggleMessageDetail">
 
-					<div v-if="selectedMessage">
-						Message at: ({{ selectedMessage.location[0] }} /
-													{{ selectedMessage.location[0] }})<br><br>
+					<div v-if="selected.message">
+						Message at coords:<br>
+						{{ selected.message.location[0] }} /
+						{{ selected.message.location[0] }}<br><br>
 
 						<div class="text-center">
-							{{ selectedMessage.text }}
+							{{ selected.message.text }}
 						</div>
 						<div class="text-right">
-							- {{ selectedMessage.from }} -
+							- {{ selected.message.from }} -
 						</div>
 					</div>
 					<div v-else>
 						NO MESSAGE SELECTED
 					</div>
 					
-		    </b-alert>
-
-		    <b-button @click="selectMessage">TEST</b-button>
-<!-- / MESSAGE DETAIL TEST -->
+				</b-alert>
+<!-- / MESSAGE DETAIL -->
 
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
@@ -53,8 +52,8 @@
 							<th>Longitude</th>
 						</tr>
 					</thead>
-					<tbody v-for="message in nearMessages">
-						<tr>
+					<tbody v-for="(message, messageIndex) in nearMessages">
+						<tr @click="toggleMessageDetail(messageIndex)">
 							<td>
 								{{ message.text.length > 10?
 									(message.text.substring(0, 10) + '...'):
@@ -125,7 +124,11 @@
 				location: [ 0, 0 ],
 				nearMessages: [],
 				showMessageDetail: false,
-				selectedMessage: null
+				selected: {
+					index: -1,
+					message: null,
+					marker: null
+				}
 			}
 		},
 		async mounted() {
@@ -233,19 +236,41 @@
 				});
 
 			},
-			selectMessage() {
-				this.showMessageDetail = !this.showMessageDetail;
-
-				var message = this.nearMessages[1];
-				var marker = mapData.nearMessagesMarkers[1];
-				
-				if (this.showMessageDetail) {
-					this.selectedMessage = message;
-					marker.setAnimation(google.maps.Animation.BOUNCE);
+			toggleMessageDetail(messageIndex) {
+				//this.showMessageDetail = !this.showMessageDetail;
+		
+				if (!this.showMessageDetail) {
+					// If the message detail is not showing
+					// Fill the message data and animate the marker
+					this.selected.index = messageIndex;
+					this.selected.message = this.nearMessages[messageIndex];
+					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
+					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
+					// Show the message detail
+					this.showMessageDetail = true;
+				} else if (messageIndex === this.selected.index) {
+					// If the message detail is showing and I click the same message
+					// Delete the message data and stop the marker animation
+					this.selected.index = -1;
+					this.selected.message = null;
+					this.selected.marker.setAnimation(null);
+					this.selected.marker = null;
+					// Hide the message detail
+					this.showMessageDetail = false;
 				} else {
-					this.selectedMessage = null;
-					marker.setAnimation(null);
-				};
+					// If the message detail is showing and I click other message
+					// Delete the message data and stop the marker animation
+					this.selected.index = -1;
+					this.selected.message = null;
+					this.selected.marker.setAnimation(null);
+					this.selected.marker = null;
+					// Fill the new message data and animate the marker
+					this.selected.index = messageIndex;
+					this.selected.message = this.nearMessages[messageIndex];
+					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
+					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
+				}
+
 			}
 
 		},
