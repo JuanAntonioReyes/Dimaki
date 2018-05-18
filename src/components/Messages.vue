@@ -31,6 +31,7 @@
 						<div class="text-center">
 							{{ selected.message.text }}
 						</div>
+						<br>
 						<div class="text-right">
 							- {{ selected.message.from }} -
 						</div>
@@ -176,7 +177,22 @@
 				//console.log("LOCATION AT getMessages() START: " + this.location);
 
 				const response = await apiAccess.fetchMessages(this.location);
-				this.nearMessages = response.data;
+
+				if (!this.selected.message) {
+					// If we don't have any message selected replace all messages
+					this.nearMessages = response.data;
+				} else {
+					// If we have any message selected, put that message the first
+					// and replace the rest with the new messages
+					this.selected.index = 0;
+
+					this.nearMessages = [this.selected.message];
+					response.data.forEach( (message, index) => {
+						if (message._id !== this.selected.message._id) {
+							this.nearMessages.push(message);
+						}
+					});
+				}
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
@@ -212,32 +228,49 @@
 				mapData.map.setCenter(newPoint);
 
 				// - Generate messages markers for the map -
-
+				// Backup the selected marker (If isn't any selected, it will be null)
+				var selectedMarker = this.selected.marker;
 				// Delete the previous markers
 				mapData.nearMessagesMarkers.forEach( (marker) => {
 					marker.setMap(null);
 				});
 				mapData.nearMessagesMarkers.length = 0;
 
+				if (selectedMarker) {
+					// If we have a previous marker selected (It is not null)
+					selectedMarker.setMap(mapData.map);
+					mapData.nearMessagesMarkers.push(selectedMarker);
+					selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
+				}
+
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
 
 				this.nearMessages.forEach( (message, index) => {
-					var markerLat = message.location[0];
-					var markerLon = message.location[1];
-					var uluru = { lat: markerLat, lng: markerLon };
+					
+					// If we don't have a selected marker or the selected marker
+					// corresponds to a different message, we add a new marker
+					// for that message
+					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {
 
-					newMessageMarker = new google.maps.Marker({
-						position: uluru,
-						label: 'M',
-						map: mapData.map
-					});
+						var markerLat = message.location[0];
+						var markerLon = message.location[1];
+						var uluru = { lat: markerLat, lng: markerLon };
 
-					newMessageMarker.addListener('click', () => {
-																				this.toggleMessageDetail(index);
-																			});
+						newMessageMarker = new google.maps.Marker({
+							position: uluru,
+							label: 'M',
+							map: mapData.map,
+							messageId: message._id
+						});
 
-					mapData.nearMessagesMarkers.push(newMessageMarker);
+						newMessageMarker.addListener('click', () => {
+																					this.toggleMessageDetail(index);
+																				});
+
+						mapData.nearMessagesMarkers.push(newMessageMarker);
+
+					}
 				});
 
 			},
