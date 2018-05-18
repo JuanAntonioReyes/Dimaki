@@ -4,8 +4,7 @@
 
 			<b-col sm="12" class="mb-4">
 
-				<!-- Remove the Number() when the testing inputs are removed -->
-				<h2>You are at {{ Number(location[0]).toFixed(6) }} / {{ Number(location[1]).toFixed(6) }}</h2>
+				<h2>You are at {{ location[0] }} / {{ location[1] }}</h2>
 
 				<router-link :to="{ name: 'newMessageLink' }">
 					<b-button size="lg" variant="success">
@@ -20,19 +19,29 @@
 		<b-row>
 			<b-col sm="12" md="6">
 
-<!-- DISMISABLE ALERT TEST -->
-				<b-alert variant="info" dismissible :show="showDismissibleAlert"
-					@dismissed="showDismissibleAlert=false">
+<!-- MESSAGE DETAIL TEST -->
+				<b-alert variant="info" dismissible :show="showMessageDetail"
+					@dismissed="selectMessage">
 
-					Message AT: (LAT / LON)<br><br>
+					<div v-if="selectedMessage">
+						Message at: ({{ selectedMessage.location[0] }} /
+													{{ selectedMessage.location[0] }})<br><br>
 
-					<div class="text-center">(MESSAGE TEXT)</div>
-					<div class="text-right">- (USERNAME) -</div>
-	
+						<div class="text-center">
+							{{ selectedMessage.text }}
+						</div>
+						<div class="text-right">
+							- {{ selectedMessage.from }} -
+						</div>
+					</div>
+					<div v-else>
+						NO MESSAGE SELECTED
+					</div>
+					
 		    </b-alert>
 
 		    <b-button @click="selectMessage">TEST</b-button>
-<!-- / DISMISABLE ALERT TEST -->
+<!-- / MESSAGE DETAIL TEST -->
 
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
@@ -51,8 +60,8 @@
 									(message.text.substring(0, 10) + '...'):
 									message.text }}
 							</td>
-							<td>{{ message.location[0].toFixed(6) }}</td>
-							<td>{{ message.location[1].toFixed(6) }}</td>
+							<td>{{ message.location[0] }}</td>
+							<td>{{ message.location[1] }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -115,7 +124,8 @@
 				//location: [ null, null ],
 				location: [ 0, 0 ],
 				nearMessages: [],
-				showDismissibleAlert: false
+				showMessageDetail: false,
+				selectedMessage: null
 			}
 		},
 		async mounted() {
@@ -155,8 +165,8 @@
 
 			onLocation(position) {
 				//console.log("LOCATION AT onLocation() START: " + this.location);
-				this.location[0] = position.coords.latitude;
-				this.location[1] = position.coords.longitude;
+				this.location[0] = position.coords.latitude.toFixed(6);
+				this.location[1] = position.coords.longitude.toFixed(6);
 				//console.log("LOCATION AT onLocation() END: " + this.location);
 			},
 			async getMessages() {
@@ -224,12 +234,16 @@
 
 			},
 			selectMessage() {
-				this.showDismissibleAlert = !this.showDismissibleAlert;
+				this.showMessageDetail = !this.showMessageDetail;
 
-				var marker = mapData.nearMessagesMarkers[0];
-				if (this.showDismissibleAlert) {
+				var message = this.nearMessages[1];
+				var marker = mapData.nearMessagesMarkers[1];
+				
+				if (this.showMessageDetail) {
+					this.selectedMessage = message;
 					marker.setAnimation(google.maps.Animation.BOUNCE);
 				} else {
+					this.selectedMessage = null;
 					marker.setAnimation(null);
 				};
 			}
