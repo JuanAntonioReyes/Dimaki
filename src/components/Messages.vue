@@ -205,7 +205,8 @@
       },
       updateMap() {
       	// Set the user marker position
-				var newPoint = new google.maps.LatLng(this.location[0], this.location[1]);
+				var newPoint = new google.maps.LatLng(this.location[0],
+																							this.location[1]);
 
 				mapData.userMarker.setPosition(newPoint);
 				mapData.map.setCenter(newPoint);
@@ -221,10 +222,10 @@
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
 
-				this.nearMessages.forEach( (message) => {
+				this.nearMessages.forEach( (message, index) => {
 					var markerLat = message.location[0];
 					var markerLon = message.location[1];
-					var uluru = {lat: markerLat, lng: markerLon};
+					var uluru = { lat: markerLat, lng: markerLon };
 
 					newMessageMarker = new google.maps.Marker({
 						position: uluru,
@@ -232,43 +233,45 @@
 						map: mapData.map
 					});
 
+					newMessageMarker.addListener('click', () => {
+																				this.toggleMessageDetail(index);
+																			});
+
 					mapData.nearMessagesMarkers.push(newMessageMarker);
 				});
 
 			},
 			toggleMessageDetail(messageIndex) {
-				//this.showMessageDetail = !this.showMessageDetail;
-		
-				if (!this.showMessageDetail) {
-					// If the message detail is not showing
-					// Fill the message data and animate the marker
+
+				if (messageIndex === undefined) {
+					messageIndex = this.selected.index;
+				}
+
+				if (this.selected.marker) {
+					// If we have a marker already selected,
+					// stop it animation and delete it
+					this.selected.marker.setAnimation(null);
+					this.selected.marker = null;
+				}
+
+				if (messageIndex !== this.selected.index) {
+					// Save the index and the message
 					this.selected.index = messageIndex;
 					this.selected.message = this.nearMessages[messageIndex];
+
+					// Save the marker and animate it
 					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
 					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
+
 					// Show the message detail
 					this.showMessageDetail = true;
-				} else if (messageIndex === this.selected.index) {
-					// If the message detail is showing and I click the same message
-					// Delete the message data and stop the marker animation
+				} else {
+					// Remove the message and the index from selected
 					this.selected.index = -1;
 					this.selected.message = null;
-					this.selected.marker.setAnimation(null);
-					this.selected.marker = null;
+
 					// Hide the message detail
 					this.showMessageDetail = false;
-				} else {
-					// If the message detail is showing and I click other message
-					// Delete the message data and stop the marker animation
-					this.selected.index = -1;
-					this.selected.message = null;
-					this.selected.marker.setAnimation(null);
-					this.selected.marker = null;
-					// Fill the new message data and animate the marker
-					this.selected.index = messageIndex;
-					this.selected.message = this.nearMessages[messageIndex];
-					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
-					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
 				}
 
 			}
