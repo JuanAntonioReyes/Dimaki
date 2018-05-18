@@ -46,7 +46,7 @@
 					</thead>
 					<tbody v-for="message in messages">
 						<tr>
-							<td>{{ message.text }}</td>
+							<td>{{ message.text.length > 10?(message.text.substring(0, 10) + '...'):message.text }}</td>
 							<td>{{ message.location[0] }}</td>
 							<td>{{ message.location[1] }}</td>
 						</tr>
