@@ -118,7 +118,7 @@
 				showDismissibleAlert: false
 			}
 		},
-		mounted() {
+		async mounted() {
 			//console.log("LOCATION AT mounted() START: " + this.location);
 	
 			// getCurrentPosition for testing, for real use use watchPosition
@@ -140,13 +140,13 @@
 		methods: {
 
 			// Ugly solution for showing correctly the location data at start
-			checkValues() { 
+			async checkValues() { 
 				// If you are exactly at 0, 0 when the app starts, this will fail
 				// Very unlikely, but it might happen, who knows?
 				if (this.location[0] != 0) {
 					this.$forceUpdate();
 
-					this.getMessages();
+					await this.getMessages();
 					this.updateMap();
 
 					clearInterval(checkStartLocationID); 
@@ -161,11 +161,9 @@
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
-console.log("GETTING MESSAGES");
+
 				const response = await apiAccess.fetchMessages(this.location);
 				this.nearMessages = response.data;
-
-console.log("MESSAGES: " + this.nearMessages);
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
@@ -209,7 +207,7 @@ console.log("MESSAGES: " + this.nearMessages);
 
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
-console.log("CREATING MARKERS");
+
 				this.nearMessages.forEach( (message) => {
 					var markerLat = message.location[0];
 					var markerLon = message.location[1];
@@ -223,7 +221,7 @@ console.log("CREATING MARKERS");
 
 					mapData.nearMessagesMarkers.push(newMessageMarker);
 				});
-console.log("MARKERS: " + mapData.nearMessagesMarkers);
+
 			},
 			selectMessage() {
 				this.showDismissibleAlert = !this.showDismissibleAlert;
