@@ -210,14 +210,14 @@
 					map: mapData.map
 				});
 
-/*				var circle = new google.maps.Circle({
+				var circle = new google.maps.Circle({
 					map: mapData.map,
-					radius: 50,
+					radius: 50, // In meters
 					fillColor: '#00AA00',
 					strokeWeight: 2
 				});
 
-				circle.bindTo('center', mapData.userMarker, 'position');*/
+				circle.bindTo('center', mapData.userMarker, 'position');
       },
       updateMap() {
       	// Set the user marker position
