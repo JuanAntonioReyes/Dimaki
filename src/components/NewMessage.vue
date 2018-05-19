@@ -1,9 +1,12 @@
 <template>
 	<div class="posts">
 		<h1>Add Message<br>
-		({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1>
-		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
-		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br>
+		<!-- ({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1> -->
+		({{ newMessage.location.coordinates[1] }} / {{ newMessage.location.coordinates[0] }})</h1>
+<!-- 		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
+		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br> -->
+		TEST LATITUDE <input type="text" v-model="newMessage.location.coordinates[1]">
+		TEST LONGITUDE <input type="text" v-model="newMessage.location.coordinates[0]"><br>
 		TEST USER <input type="text" v-model="newMessage.from"><br>
 		TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate">
 
@@ -24,7 +27,7 @@
 // FOR TESTING)
 	import apiAccess from '../apiAccess.js';
 
-	// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
+	// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED?
 	var checkStartLocationID;
 
 	export default {
@@ -32,7 +35,10 @@
 			return {
 				newMessage: {
 					text: null,
-					location: [0, 0],
+					location: {
+						type: 'Point',
+						coordinates: [0, 0]
+					},
 					date: null,
 					from: null,
 					public: false,
@@ -64,15 +70,17 @@
 
 			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
 			checkValues() { 
-				if (this.newMessage.location[0] != 0) {
+				if (this.newMessage.location.coordinates[0] != 0) {
 					this.$forceUpdate();
 					clearInterval(checkStartLocationID); 
 				}
 			},
 
 			onLocation(position) {
-				this.newMessage.location[0] = position.coords.latitude;
-				this.newMessage.location[1] = position.coords.longitude;
+				/*this.newMessage.location[0] = position.coords.latitude;
+				this.newMessage.location[1] = position.coords.longitude;*/
+				this.newMessage.location.coordinates[0] = position.coords.longitude;
+				this.newMessage.location.coordinates[1] = position.coords.latitude;
 			},
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();

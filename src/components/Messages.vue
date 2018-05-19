@@ -177,7 +177,7 @@
 				//console.log("LOCATION AT getMessages() START: " + this.location);
 
 				const response = await apiAccess.fetchMessages(this.location);
-
+//-------------------------------------------------------
 				if (!this.selected.message) {
 					// If we don't have any message selected replace all messages
 					this.nearMessages = response.data;
@@ -253,8 +253,10 @@
 					// for that message
 					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {
 
-						var markerLat = message.location[0];
-						var markerLon = message.location[1];
+/*						var markerLat = message.location[0];
+						var markerLon = message.location[1];*/
+						var markerLat = message.location.coordinates[1];
+						var markerLon = message.location.coordinates[0];
 						var uluru = { lat: markerLat, lng: markerLon };
 
 						newMessageMarker = new google.maps.Marker({
@@ -263,7 +265,7 @@
 							map: mapData.map,
 							messageId: message._id
 						});
-
+						
 						newMessageMarker.addListener('click', () => {
 																					this.toggleMessageDetail(index);
 																				});
