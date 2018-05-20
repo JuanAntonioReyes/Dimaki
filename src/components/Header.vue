@@ -2,8 +2,8 @@
 	<b-row class="text-center">
 
 		<b-col sm="12" md="10" offset-md="1">
-			<a href="/" class="navbar-brand">
-				<img src="../assets/logoH.png" alt="Dimakí logo" class="logo">
+			<a href="/">
+				<img src="../assets/logoH.png" class="img-fluid" alt="Dimakí logo">
 			</a>
 		</b-col>
 		
@@ -43,9 +43,3 @@
 	}
 
 </script>
-
-<style>
-.logo {
-	width: 25em;
-}
-</style>

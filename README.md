@@ -1,6 +1,6 @@
 # Dimakí
 
-## Geopositional messaging App
+## Geopositional Messaging App
 
 (API: [Dimakí API](https://github.com/JuanAntonioReyes/Dimaki-API))
 
