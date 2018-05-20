@@ -81,8 +81,10 @@
 			onLocation(position) {
 				/*this.newMessage.location[0] = position.coords.latitude;
 				this.newMessage.location[1] = position.coords.longitude;*/
-				this.newMessage.location.coordinates[0] = position.coords.longitude;
-				this.newMessage.location.coordinates[1] = position.coords.latitude;
+				this.newMessage.location.coordinates[0] =
+					Number(position.coords.longitude.toFixed(6));
+				this.newMessage.location.coordinates[1] =
+					Number(position.coords.latitude.toFixed(6));
 			},
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();
@@ -90,6 +92,13 @@
 				this.newMessage.from = response.data.name;
 			},
 			async addMessage() {
+
+				// TEMPORAL PATCH WHILE I HAVE THE INPUTs FOR COORDINATE TESTING
+				this.newMessage.location.coordinates[0] =
+					Number(this.newMessage.location.coordinates[0]);
+				this.newMessage.location.coordinates[1] =
+					Number(this.newMessage.location.coordinates[1]);
+
 				await apiAccess.addMessage(this.newMessage);
 
 				//console.log("TOKEN: " + userToken);

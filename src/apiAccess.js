@@ -9,7 +9,8 @@ var axiosInstance = axios.create({
 
 export default {
 	fetchMessages(params) {
-		var urlGet = 'api/messages/' + params[0] + '/' + params[1];
+		var urlGet = 'api/messages/' + params[0] + '/' + params[1]+ 
+									'/' + params[2] + '/' + params [3];
 		
 		return axiosInstance.get(urlGet);
 	},

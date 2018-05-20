@@ -115,6 +115,7 @@
 	var mapData = {
 									map: null,
 									userMarker: null,
+									messagesMarkers: [],
 									nearMessagesMarkers: []
 								};
 
@@ -123,6 +124,7 @@
 			return {
 				//location: [ null, null ],
 				location: [ 0, 0 ],
+				messages: [],
 				nearMessages: [],
 				showMessageDetail: false,
 				selected: {
@@ -169,30 +171,38 @@
 
 			onLocation(position) {
 				//console.log("LOCATION AT onLocation() START: " + this.location);
-				this.location[0] = position.coords.latitude.toFixed(6);
-				this.location[1] = position.coords.longitude.toFixed(6);
+				this.location[0] =
+					Number(position.coords.longitude.toFixed(6));
+				this.location[1] =
+					Number(position.coords.latitude.toFixed(6));
 				//console.log("LOCATION AT onLocation() END: " + this.location);
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
 
-				const response = await apiAccess.fetchMessages(this.location);
-//-------------------------------------------------------
+				var params = this.location.concat([10000, 50])
+				var nearParams = this.location.concat([50, 0]);
+
+				var response = await apiAccess.fetchMessages(params);
+				var responseNear = await apiAccess.fetchMessages(nearParams);
+
 				if (!this.selected.message) {
 					// If we don't have any message selected replace all messages
-					this.nearMessages = response.data;
+					this.nearMessages = responseNear.data;
 				} else {
 					// If we have any message selected, put that message the first
 					// and replace the rest with the new messages
 					this.selected.index = 0;
 
 					this.nearMessages = [this.selected.message];
-					response.data.forEach( (message, index) => {
+					responseNear.data.forEach( (message, index) => {
 						if (message._id !== this.selected.message._id) {
 							this.nearMessages.push(message);
 						}
 					});
 				}
+
+				this.messages = response.data;
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
@@ -207,6 +217,12 @@
 
 				mapData.userMarker = new google.maps.Marker({
 					position: uluru,
+					icon: {
+						path: google.maps.SymbolPath.CIRCLE,
+						strokeColor: 'blue',
+						scale: 5,
+						strokeWeight: 5
+					},
 					map: mapData.map
 				});
 
@@ -230,7 +246,12 @@
 				// - Generate messages markers for the map -
 				// Backup the selected marker (If isn't any selected, it will be null)
 				var selectedMarker = this.selected.marker;
-				// Delete the previous markers
+				// Delete the previous markers ("Long" distance)
+				mapData.messagesMarkers.forEach( (marker) => {
+					marker.setMap(null);
+				});
+				mapData.messagesMarkers.length = 0;
+				// Delete the previous markers (Near)
 				mapData.nearMessagesMarkers.forEach( (marker) => {
 					marker.setMap(null);
 				});
@@ -246,6 +267,40 @@
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
 
+				// ("Long" distance)
+				this.messages.forEach( (message, index) => {
+					
+					// If we don't have a selected marker or the selected marker
+					// corresponds to a different message, we add a new marker
+					// for that message
+					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {
+
+						var markerLat = message.location.coordinates[1];
+						var markerLon = message.location.coordinates[0];
+						var uluru = { lat: markerLat, lng: markerLon };
+
+						newMessageMarker = new google.maps.Marker({
+							position: uluru,
+							icon: {
+								path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
+								strokeColor: 'red',
+								scale: 4,
+								strokeWeight: 4
+							},
+							map: mapData.map,
+							messageId: message._id
+						});
+						
+						newMessageMarker.addListener('click', () => {
+																					this.toggleMessageDetail(index);
+																				});
+
+						mapData.nearMessagesMarkers.push(newMessageMarker);
+
+					}
+				});
+
+				// (Near)
 				this.nearMessages.forEach( (message, index) => {
 					
 					// If we don't have a selected marker or the selected marker
@@ -261,7 +316,12 @@
 
 						newMessageMarker = new google.maps.Marker({
 							position: uluru,
-							label: 'M',
+							icon: {
+								path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+								strokeColor: 'green',
+								scale: 5,
+								strokeWeight: 5
+							},
 							map: mapData.map,
 							messageId: message._id
 						});
