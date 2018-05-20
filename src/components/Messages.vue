@@ -47,7 +47,7 @@
 
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
-				<table class="table table-hover">
+				<table id="nearMessagesList" class="table table-hover">
 					<thead class="thead-default">
 						<tr>
 							<th>Message</th>
@@ -62,8 +62,8 @@
 									(message.text.substring(0, 10) + '...'):
 									message.text }}
 							</td>
-							<td>{{ message.location[0] }}</td>
-							<td>{{ message.location[1] }}</td>
+							<td>{{ message.location.coordinates[1] }}</td>
+							<td>{{ message.location.coordinates[0] }}</td>
 						</tr>
 					</tbody>
 				</table>
@@ -195,6 +195,8 @@
 					// If we have any message selected, put that message the first
 					// on the near messages (Even if it is "Long" distance)
 					this.selected.index = 0;
+					this.toggleListMessageSelected(0);
+
 					this.nearMessages = [this.selected.message];
 
 					response.data.forEach( (message, index) => {
@@ -373,6 +375,9 @@
 					// marker (-2)
 					this.selected.marker.setAnimation(null);
 					this.selected.marker = null;
+
+					// "Deselect" the message from the list (Change it background color)
+					this.toggleListMessageSelected(this.selected.index);
 				}
 
 				if (messageIndex === -2) {
@@ -389,6 +394,9 @@
 					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
 					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
 
+					// "Select" the message from the list (Change it background color)
+					this.toggleListMessageSelected(messageIndex);
+
 					// Show the message detail
 					this.showMessageDetail = true;
 				} else {
@@ -398,6 +406,18 @@
 
 					// Hide the message detail
 					this.showMessageDetail = false;
+				}
+
+			},
+			toggleListMessageSelected(index) {
+					
+				var messagesList = document.getElementById('nearMessagesList').tBodies;
+				var prevStyle = messagesList[index].style;
+
+				if (prevStyle.background === "") {
+					prevStyle.background = "gray";
+				} else {
+					prevStyle.background = "";
 				}
 
 			}
