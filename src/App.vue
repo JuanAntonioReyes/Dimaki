@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-		<b-container fluid>
+		<b-container fluid class="mb-4" tag="header">
 			<pp-header></pp-header>
 		</b-container>
     
-    <router-view></router-view>
+    <b-container>
+      <router-view></router-view>
+    </b-container>
     
-		<b-container fluid>
+		<b-container fluid class="mt-4" tag="footer">
 			<pp-footer></pp-footer>
 		</b-container>
   </div>

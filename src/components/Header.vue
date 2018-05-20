@@ -1,5 +1,5 @@
 <template>
-	<b-row tag="header" class="text-center">
+	<b-row class="text-center">
 
 		<b-col sm="12" md="10" offset-md="1">
 			<a href="/" class="navbar-brand">

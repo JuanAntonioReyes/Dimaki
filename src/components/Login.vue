@@ -14,7 +14,7 @@
 			You don't have an account? <a href="">Register now!</a>
 		</router-link> -->
 
-
+<!-- CONVERT THIS INTO BOOTSTRAP VUE NOTATION -->
 		<form>
 			<div class="form-group row">
 				<label class="col-sm-3">Username</label>
@@ -30,11 +30,15 @@
 						id="pass" v-model="loginData.pass">
 				</div>
 			</div>
-			<button class="btn btn-primary" @click.prevent="login">Login</button>
+			<button class="btn btn-primary" @click.prevent="login">
+				Login
+			</button>
 		</form>
 
-		<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
-			You don't have an account? <a href="">Register now!</a>
+		<br>
+		You don't have an account?<br>
+		<router-link :to="{ name: 'registerLink' }" class="nav-item">
+			Register now!
 		</router-link>
 
 	</div>

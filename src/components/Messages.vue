@@ -1,5 +1,6 @@
 <template>
-	<b-container class="messages mt-4">
+<!-- 	<b-container class="messages mt-4"> -->
+	<div class="messages">
 		<b-row class="text-center">
 
 			<b-col sm="12" class="mb-4">
@@ -107,7 +108,8 @@
 			</b-col>
 		</b-row> -->
 
-	</b-container>		
+<!-- 	</b-container>	 -->	
+	</div>
 </template>
 
 <script>
