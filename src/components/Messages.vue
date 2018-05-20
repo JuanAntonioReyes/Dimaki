@@ -23,7 +23,12 @@
 				<b-alert variant="info" dismissible :show="showMessageDetail"
 					@dismissed="toggleMessageDetail">
 
-					<div v-if="selected.message">
+					<div v-if="selected.index === -1">
+						<div class="text-center">
+							NO MESSAGE SELECTED
+						</div>
+					</div>
+					<div v-else>
 						Message at coords:<br>
 						{{ selected.message.location[0] }} /
 						{{ selected.message.location[0] }}<br><br>
@@ -35,9 +40,6 @@
 						<div class="text-right">
 							- {{ selected.message.from }} -
 						</div>
-					</div>
-					<div v-else>
-						NO MESSAGE SELECTED
 					</div>
 					
 				</b-alert>
@@ -156,7 +158,7 @@
 		methods: {
 
 			// Ugly solution for showing correctly the location data at start
-			async checkValues() { 
+			async checkValues() {
 				// If you are exactly at 0, 0 when the app starts, this will fail
 				// Very unlikely, but it might happen, who knows?
 				if (this.location[0] != 0) {
@@ -172,15 +174,15 @@
 			onLocation(position) {
 				//console.log("LOCATION AT onLocation() START: " + this.location);
 				this.location[0] =
-					Number(position.coords.longitude.toFixed(6));
-				this.location[1] =
 					Number(position.coords.latitude.toFixed(6));
+				this.location[1] =
+					Number(position.coords.longitude.toFixed(6));
 				//console.log("LOCATION AT onLocation() END: " + this.location);
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
 
-				var params = this.location.concat([10000, 50.01])
+				var params = this.location.concat([5000, 50.01])
 				var nearParams = this.location.concat([50, 0]);
 
 				var response = await apiAccess.fetchMessages(params);
@@ -195,7 +197,7 @@
 					this.selected.index = 0;
 					this.nearMessages = [this.selected.message];
 
-/*					response.data.forEach( (message, index) => {
+					response.data.forEach( (message, index) => {
 						if (message._id !== this.selected.message._id) {
 							this.messages.push(message);
 						}
@@ -204,7 +206,7 @@
 						if (message._id !== this.selected.message._id) {
 							this.nearMessages.push(message);
 						}
-					});*/
+					});
 
 					// Remove the selected message from the responses
 					response.data = response.data.filter(
@@ -224,7 +226,7 @@
 			},
 			initMap() {
 				document.getElementById('map').textContent = "The map goes here";
-				var uluru = {lat: Number(this.location[0]), lng: Number(this.location[1])};
+				var uluru = {lat: this.location[0], lng: this.location[1]};
 				
 				mapData.map = new google.maps.Map(document.getElementById('map'), {
 					zoom: 18,
@@ -242,17 +244,25 @@
 					map: mapData.map
 				});
 
-				var circle = new google.maps.Circle({
+/*				var circle = new google.maps.Circle({
+					map: mapData.map,
+					radius: 5000, // In meters
+					fillColor: '#AA0000'
+				});
+
+				circle.bindTo('center', mapData.userMarker, 'position');*/
+
+				var circleNear = new google.maps.Circle({
 					map: mapData.map,
 					radius: 50, // In meters
 					fillColor: '#00AA00',
 					strokeWeight: 2
 				});
 
-				circle.bindTo('center', mapData.userMarker, 'position');
+				circleNear.bindTo('center', mapData.userMarker, 'position');
       },
       updateMap() {
-      	// Set the user marker position
+				// Set the user marker position
 				var newPoint = new google.maps.LatLng(this.location[0],
 																							this.location[1]);
 
@@ -274,7 +284,7 @@
 				mapData.nearMessagesMarkers.length = 0;
 
 				if (selectedMarker) {
-					// If we have a previous marker selected (It is not null)
+					// If we have a previous selected marker selected (It is not null)
 					selectedMarker.setMap(mapData.map);
 					mapData.nearMessagesMarkers.push(selectedMarker);
 					selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
@@ -303,10 +313,10 @@
 					});
 					
 					newMessageMarker.addListener('click', () => {
-																				this.toggleMessageDetail(index);
+																				this.toggleMessageDetail(-2);
 																			});
 
-					mapData.nearMessagesMarkers.push(newMessageMarker);
+					mapData.messagesMarkers.push(newMessageMarker);
 
 				});
 
@@ -347,20 +357,31 @@
 
 			},
 			toggleMessageDetail(messageIndex) {
+				// MessageIndex meaning:
+				// undefined (From the dismiss button - It will be the same as selected)
+				// -1 (No selected), -2 (Out of range), 0 to n (Near message)
 
 				if (messageIndex === undefined) {
 					messageIndex = this.selected.index;
 				}
 
-				if (this.selected.marker) {
-					// If we have a marker already selected,
-					// stop it animation and delete it
+				if (this.selected.marker && (messageIndex !== -2)) {
+					// If we have a previously selected marker, stop it animation and
+					// remove it from selected
+					// This needs to happen if we select a new marker or if we deselect
+					// one previously selected,but not if we select an out of range
+					// marker (-2)
 					this.selected.marker.setAnimation(null);
 					this.selected.marker = null;
 				}
 
-				if (messageIndex !== this.selected.index) {
-					// Save the index and the message
+				if (messageIndex === -2) {
+					// If we select a marker out of range
+					alert("This message is out of range\n" +
+								"You must be closer to read it");
+				} else if (messageIndex !== this.selected.index) {
+					// If we select a marker or message different from the previously
+					// selected, save it index and it message
 					this.selected.index = messageIndex;
 					this.selected.message = this.nearMessages[messageIndex];
 
