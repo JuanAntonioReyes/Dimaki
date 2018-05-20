@@ -77,6 +77,9 @@
 					clearInterval(checkStartLocationID); 
 				}
 			},
+			sleep(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms));
+			},
 
 			onLocation(position) {
 				/*this.newMessage.location[0] = position.coords.latitude;

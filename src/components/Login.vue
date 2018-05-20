@@ -1,7 +1,7 @@
 <template>
 	<div class="posts">
 		<h1>Login</h1>
-		<div class="form">
+<!-- 		<div class="form">
 			<div>
 				Username: <input type="text" v-model="loginData.name"><br>
 				Password: <input type="password" v-model="loginData.pass"><br>
@@ -12,7 +12,31 @@
 		</div>
 		<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
 			You don't have an account? <a href="">Register now!</a>
+		</router-link> -->
+
+
+		<form>
+			<div class="form-group row">
+				<label class="col-sm-3">Username</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control"
+						id="name" v-model="loginData.name">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-3">Password</label>
+				<div class="col-sm-9">
+					<input type="password" class="form-control"
+						id="pass" v-model="loginData.pass">
+				</div>
+			</div>
+			<button class="btn btn-primary" @click.prevent="login">Login</button>
+		</form>
+
+		<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
+			You don't have an account? <a href="">Register now!</a>
 		</router-link>
+
 	</div>
 </template>
 
@@ -32,11 +56,12 @@
     	async login() {
 				var response = await apiAccess.loginUser(this.loginData);
 
-				// Before this, I should check if the browser supports localStorage
+				// TODO: Before this, I should check if the browser supports localStorage
 				localStorage.setItem("userToken", response.data.token);
 
 				this.$router.push({ name: 'messagesLink' });
 			}
+	
   }
 }
 </script>
