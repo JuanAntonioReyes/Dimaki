@@ -180,7 +180,7 @@
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
 
-				var params = this.location.concat([10000, 50])
+				var params = this.location.concat([10000, 50.01])
 				var nearParams = this.location.concat([50, 0]);
 
 				var response = await apiAccess.fetchMessages(params);
@@ -191,17 +191,33 @@
 					this.nearMessages = responseNear.data;
 				} else {
 					// If we have any message selected, put that message the first
-					// and replace the rest with the new messages
+					// on the near messages (Even if it is "Long" distance)
 					this.selected.index = 0;
-
 					this.nearMessages = [this.selected.message];
+
+/*					response.data.forEach( (message, index) => {
+						if (message._id !== this.selected.message._id) {
+							this.messages.push(message);
+						}
+					});
 					responseNear.data.forEach( (message, index) => {
 						if (message._id !== this.selected.message._id) {
 							this.nearMessages.push(message);
 						}
-					});
+					});*/
+
+					// Remove the selected message from the responses
+					response.data = response.data.filter(
+							(message) => {	return message._id != this.selected.message });// || null;
+					responseNear.data = responseNear.data.filter(
+							(message) => { return message._id != this.selected.message });// || null;
+
+					// Concat the nearResponse without the selected with de near messages
+					this.nearMessages.concat(responseNear.data);
 				}
 
+				// The response will alway replace the full messages array
+				// (When we have removed  the selected from it and also when we don't)
 				this.messages = response.data;
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
@@ -270,34 +286,28 @@
 				// ("Long" distance)
 				this.messages.forEach( (message, index) => {
 					
-					// If we don't have a selected marker or the selected marker
-					// corresponds to a different message, we add a new marker
-					// for that message
-					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {
+					var markerLat = message.location.coordinates[1];
+					var markerLon = message.location.coordinates[0];
+					var uluru = { lat: markerLat, lng: markerLon };
 
-						var markerLat = message.location.coordinates[1];
-						var markerLon = message.location.coordinates[0];
-						var uluru = { lat: markerLat, lng: markerLon };
+					newMessageMarker = new google.maps.Marker({
+						position: uluru,
+						icon: {
+							path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
+							strokeColor: 'red',
+							scale: 4,
+							strokeWeight: 4
+						},
+						map: mapData.map,
+						messageId: message._id
+					});
+					
+					newMessageMarker.addListener('click', () => {
+																				this.toggleMessageDetail(index);
+																			});
 
-						newMessageMarker = new google.maps.Marker({
-							position: uluru,
-							icon: {
-								path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
-								strokeColor: 'red',
-								scale: 4,
-								strokeWeight: 4
-							},
-							map: mapData.map,
-							messageId: message._id
-						});
-						
-						newMessageMarker.addListener('click', () => {
-																					this.toggleMessageDetail(index);
-																				});
+					mapData.nearMessagesMarkers.push(newMessageMarker);
 
-						mapData.nearMessagesMarkers.push(newMessageMarker);
-
-					}
 				});
 
 				// (Near)
