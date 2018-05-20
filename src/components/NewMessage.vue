@@ -8,6 +8,7 @@
 		TEST LATITUDE <input type="text" v-model="newMessage.location.coordinates[1]">
 		TEST LONGITUDE <input type="text" v-model="newMessage.location.coordinates[0]"><br>
 		TEST USER <input type="text" v-model="newMessage.from"><br>
+		TEST HIDDEN <input type="checkbox" v-model="newMessage.hidden"><br>
 		TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate">
 
 		<div class="form">
@@ -42,6 +43,7 @@
 					date: null,
 					from: null,
 					public: false,
+					hidden: false,
 					to: [],
 					expirationDate: null
 				}

@@ -23,9 +23,13 @@
 				newUser: {
 					name: null,
 					pass: null,
-					email: null
+					email: null,
+					registerDate: null
 				}
 			}
+		},
+		mounted() {
+			this.newUser.registerDate = Date.now();
 		},
 		methods: {
     	async registerUser() {
