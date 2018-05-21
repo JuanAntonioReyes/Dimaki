@@ -5,6 +5,13 @@
 
 			<b-col sm="12" class="mb-4">
 
+<!-- 				<h2>
+					You are at coords
+					{{ Number(this.location[0].toFixed(6)) }} / 
+					{{ Number(this.location[1].toFixed(6)) }}
+				</h2> -->
+				<!-- Change this for the commented above when
+				the test location inputs are removed for production -->
 				<h2>
 					You are at coords
 					{{ Number(Number(this.location[0]).toFixed(6)) }} / 
@@ -361,7 +368,7 @@
 
 				// (Near)
 				this.nearMessages.forEach( (message, index) => {
-					
+
 					// If we don't have a selected marker or the selected marker
 					// corresponds to a different message, we add a new marker
 					// for that message
@@ -461,9 +468,9 @@
 
 		},
 		watch: {
-			location: function (val) {
+			location: async function (val) {
 				//console.log("--location watch called--");
-				this.getMessages();
+				await this.getMessages();
 				this.updateMap();
 			}
 		}
