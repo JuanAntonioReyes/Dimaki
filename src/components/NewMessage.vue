@@ -30,8 +30,8 @@
 // FOR TESTING)
 	import apiAccess from '../apiAccess.js';
 
-	// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED?
-	var checkStartLocationID;
+/*	// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED?
+	var checkStartLocationID;*/
 
 	export default {
 		data() {
@@ -51,11 +51,6 @@
 				}
 			}
 		},
-		computed: {
-			locationToFixed: function () {
-				return this.location;
-			}
-		},
 		mounted() {
 			this.getUser();
 
@@ -71,22 +66,19 @@
 																		(error) => console.log(error),
 																		{ enableHighAccuracy : true });
 
-			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
-			checkStartLocationID = setInterval(this.checkValues, 1000);			
+/*			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
+			checkStartLocationID = setInterval(this.checkValues, 1000);		*/	
 
 		},
 		methods: {
 
-			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
+/*			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
 			checkValues() { 
 				if (this.newMessage.location.coordinates[0] != 0) {
 					this.$forceUpdate();
 					clearInterval(checkStartLocationID); 
 				}
-			},
-			sleep(ms) {
-				return new Promise(resolve => setTimeout(resolve, ms));
-			},
+			},*/
 
 			onLocation(position) {
 				/*this.newMessage.location[0] = position.coords.latitude;
@@ -95,8 +87,14 @@
 					Number(position.coords.longitude.toFixed(6));
 				this.newMessage.location.coordinates[1] =
 					Number(position.coords.latitude.toFixed(6));*/
-				this.newMessage.location.coordinates[0] = position.coords.longitude;
-				this.newMessage.location.coordinates[1] = position.coords.latitude;
+
+/*				this.newMessage.location.coordinates[0] = position.coords.longitude;
+				this.newMessage.location.coordinates[1] = position.coords.latitude;*/
+
+				this.$set( this.newMessage.location.coordinates, 0,
+					position.coords.latitude );
+				this.$set( this.newMessage.location.coordinates, 1,
+					position.coords.longitude );
 			},
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();

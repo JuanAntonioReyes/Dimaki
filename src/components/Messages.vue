@@ -7,8 +7,8 @@
 
 				<h2>
 					You are at coords
-					{{ Number(this.location[0].toFixed(6)) }} / 
-					{{ Number(this.location[1].toFixed(6)) }}
+					{{ Number(Number(this.location[0]).toFixed(6)) }} / 
+					{{ Number(Number(this.location[1]).toFixed(6)) }}
 				</h2>
 
 				<router-link :to="{ name: 'newMessageLink' }">
@@ -128,7 +128,7 @@
 <script>
 	import apiAccess from '../apiAccess.js';
 
-	var checkStartLocationID;
+	//var checkStartLocationID;
 	var mapData = {
 									map: null,
 									userMarker: null,
@@ -169,7 +169,7 @@
 
 			// TODO: FIX THIS CORRECTLY!
 			// Ugly solution for showing correctly the location data at start
-			checkStartLocationID = setInterval(this.checkValues, 1000);			
+			//checkStartLocationID = setInterval(this.checkValues, 1000);			
 
 			//this.updateMap();
 	
@@ -177,7 +177,7 @@
 		},
 		methods: {
 
-			// Ugly solution for showing correctly the location data at start
+/*			// Ugly solution for showing correctly the location data at start
 			async checkValues() {
 				// If you are exactly at 0, 0 when the app starts, this will fail
 				// Very unlikely, but it might happen, who knows?
@@ -189,17 +189,23 @@
 
 					clearInterval(checkStartLocationID); 
 				}
-			},
+			},*/
 
 			onLocation(position) {
-				console.log("-- onLocation() called --");
+				//console.log("-- onLocation() called --");
 				//console.log("LOCATION AT onLocation() START: " + this.location);
 /*				this.location[0] =
 					Number(position.coords.latitude.toFixed(6));
 				this.location[1] =
 					Number(position.coords.longitude.toFixed(6));*/
-				this.location[0] = position.coords.latitude;
-				this.location[1] = position.coords.longitude;
+
+/*				this.location[0] = position.coords.latitude;
+				this.location[1] = position.coords.longitude;*/
+
+				this.$set( this.location, 0, position.coords.latitude );
+				this.$set( this.location, 1, position.coords.longitude );
+				
+				//this.$forceUpdate();
 
 /*				console.log("Location: " + this.location);
 				console.log("Latitude: " + position.coords.latitude);
