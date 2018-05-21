@@ -5,7 +5,11 @@
 
 			<b-col sm="12" class="mb-4">
 
-				<h2>You are at coords {{ location[0] }} / {{ location[1] }}</h2>
+				<h2>
+					You are at coords
+					{{ Number(this.location[0].toFixed(6)) }} / 
+					{{ Number(this.location[1].toFixed(6)) }}
+				</h2>
 
 				<router-link :to="{ name: 'newMessageLink' }">
 					<b-button size="lg" variant="success">
@@ -31,8 +35,8 @@
 					</div>
 					<div v-else>
 						Message at coords:<br>
-						{{ selected.message.location[0] }} /
-						{{ selected.message.location[0] }}<br><br>
+						{{ selected.message.location.coordinates[1] }} /
+						{{ selected.message.location.coordinates[0] }}<br><br>
 
 						<div class="text-center">
 							{{ selected.message.text }}
@@ -51,7 +55,7 @@
 				
 				<div v-if="noNearMessages" class="text-center">
 					<h3>
-						There isn't any messages in this area
+						There isn't any messages in this area<br>
 						<router-link :to="{ name: 'newMessageLink' }">
 							Leave one now!
 						</router-link>
@@ -190,10 +194,12 @@
 			onLocation(position) {
 				console.log("-- onLocation() called --");
 				//console.log("LOCATION AT onLocation() START: " + this.location);
-				this.location[0] =
+/*				this.location[0] =
 					Number(position.coords.latitude.toFixed(6));
 				this.location[1] =
-					Number(position.coords.longitude.toFixed(6));
+					Number(position.coords.longitude.toFixed(6));*/
+				this.location[0] = position.coords.latitude;
+				this.location[1] = position.coords.longitude;
 
 /*				console.log("Location: " + this.location);
 				console.log("Latitude: " + position.coords.latitude);

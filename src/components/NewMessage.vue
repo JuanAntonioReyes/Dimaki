@@ -2,7 +2,9 @@
 	<div class="posts">
 		<h1>Add Message<br>
 		<!-- ({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1> -->
-		({{ newMessage.location.coordinates[1] }} / {{ newMessage.location.coordinates[0] }})</h1>
+			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
+			{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
+		</h1>
 <!-- 		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
 		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br> -->
 		TEST LATITUDE <input type="text" v-model="newMessage.location.coordinates[1]">
@@ -49,6 +51,11 @@
 				}
 			}
 		},
+		computed: {
+			locationToFixed: function () {
+				return this.location;
+			}
+		},
 		mounted() {
 			this.getUser();
 
@@ -84,10 +91,12 @@
 			onLocation(position) {
 				/*this.newMessage.location[0] = position.coords.latitude;
 				this.newMessage.location[1] = position.coords.longitude;*/
-				this.newMessage.location.coordinates[0] =
+/*				this.newMessage.location.coordinates[0] =
 					Number(position.coords.longitude.toFixed(6));
 				this.newMessage.location.coordinates[1] =
-					Number(position.coords.latitude.toFixed(6));
+					Number(position.coords.latitude.toFixed(6));*/
+				this.newMessage.location.coordinates[0] = position.coords.longitude;
+				this.newMessage.location.coordinates[1] = position.coords.latitude;
 			},
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();
