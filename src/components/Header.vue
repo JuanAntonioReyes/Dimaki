@@ -1,13 +1,13 @@
 <template>
 	<b-row class="text-center">
 
-		<b-col sm="12" md="10" offset-md="1">
+		<b-col sm="12" md="6" offset-md="3">
 			<a href="/">
 				<img src="../assets/logoH.png" class="img-fluid" alt="Dimakí logo">
 			</a>
 		</b-col>
 		
-		<b-col sm="12" md="1">
+		<b-col sm="12" md="3">
 			<strong v-if="loggedUser">
 				<a href="" @click="logout">Logout</a>
 			</strong>

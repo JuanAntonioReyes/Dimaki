@@ -48,7 +48,16 @@
 
 				TEST LATITUDE <input type="text" v-model="location[0]"><br>
 				TEST LONGITUDE <input type="text" v-model="location[1]">
-				<table id="nearMessagesList" class="table table-hover">
+				
+				<div v-if="noNearMessages" class="text-center">
+					<h3>
+						There isn't any messages in this area
+						<router-link :to="{ name: 'newMessageLink' }">
+							Leave one now!
+						</router-link>
+					</h3>
+				</div>
+				<table v-else id="nearMessagesList" class="table table-hover">
 					<thead class="thead-default">
 						<tr>
 							<th>Message</th>
@@ -138,6 +147,11 @@
 				}
 			}
 		},
+		computed: {
+			noNearMessages: function () {
+				return (this.nearMessages.length === 0);
+			}
+		},
 		async mounted() {
 			//console.log("LOCATION AT mounted() START: " + this.location);
 	
@@ -174,11 +188,20 @@
 			},
 
 			onLocation(position) {
+				console.log("-- onLocation() called --");
 				//console.log("LOCATION AT onLocation() START: " + this.location);
 				this.location[0] =
 					Number(position.coords.latitude.toFixed(6));
 				this.location[1] =
 					Number(position.coords.longitude.toFixed(6));
+
+/*				console.log("Location: " + this.location);
+				console.log("Latitude: " + position.coords.latitude);
+				console.log("Latitude6: " + position.coords.latitude.toFixed(6));
+				console.log("Latitude6N: " + Number(position.coords.latitude.toFixed(6)));
+				console.log("Longitude: " + position.coords.longitude);
+				console.log("Longitude6: " + position.coords.longitude.toFixed(6));
+				console.log("Longitude6N: " + Number(position.coords.longitude.toFixed(6)));*/
 				//console.log("LOCATION AT onLocation() END: " + this.location);
 			},
 			async getMessages() {
