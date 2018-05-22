@@ -32,8 +32,8 @@
 			<b-col sm="12" md="6">
 
 <!-- MESSAGE DETAIL -->
-				<b-alert variant="info" dismissible :show="showMessageDetail"
-					@dismissed="toggleMessageDetail">
+				<b-alert :variant="messageDetailVariant" dismissible
+					:show="showMessageDetail" @dismissed="toggleMessageDetail">
 
 					<div v-if="selected.index === -1">
 						<div class="text-center">
@@ -41,7 +41,12 @@
 						</div>
 					</div>
 					<div v-else>
-						Message at coords:<br>
+						<div v-if="selected.message.hidden">
+							Secret message at coords:
+						</div>
+						<div v-else>
+							Message at coords:
+						</div>
 						{{ selected.message.location.coordinates[1] }} /
 						{{ selected.message.location.coordinates[0] }}<br><br>
 
@@ -163,6 +168,15 @@
 		computed: {
 			noNearMessages: function () {
 				return (this.nearMessages.length === 0);
+			},
+			messageDetailVariant: function () {
+				var variant = 'info';
+
+				if (this.selected.message && this.selected.message.hidden) {
+					variant = 'warning';
+				}
+
+				return variant;
 			}
 		},
 		async mounted() {
@@ -211,7 +225,7 @@
 /*				this.location[0] = position.coords.latitude;
 				this.location[1] = position.coords.longitude;*/
 //------TESTING--------------------
-				sum += 0.00005;
+				sum += 0.0002;
 				this.$set( this.location, 0, position.coords.latitude + sum );
 //------/TESTING--------------------
 				//this.$set( this.location, 0, position.coords.latitude );
@@ -285,6 +299,10 @@
 				// Get the messages ("Long" distance and near)
 				var response = await apiAccess.fetchMessages(params);
 				var responseNear = await apiAccess.fetchMessages(nearParams);
+				
+				// Remove the hidden messages from the "long" distance messages
+				response.data = response.data.filter(	(message) =>
+					{ return !message.hidden; });
 
 				// Delete the previous messages
 				this.messages.length = 0;
@@ -488,6 +506,8 @@
 
 						mapData.nearMessagesMarkers.push(newMessageMarker);*/
 
+						var markerColor = message.hidden ? 'orange' : 'green';
+
 						// If the message is not in the markers list, add a new marker
 						var inMarkers = mapData.nearMessagesMarkers.filter( (marker) => { return marker.messageId === message._id } )[0] || null;
 
@@ -500,7 +520,7 @@
 								position: uluru,
 								icon: {
 									path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-									strokeColor: 'green',
+									strokeColor: markerColor,
 									scale: 5,
 									strokeWeight: 5
 								},
