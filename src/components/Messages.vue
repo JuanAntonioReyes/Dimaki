@@ -225,7 +225,7 @@
 /*				this.location[0] = position.coords.latitude;
 				this.location[1] = position.coords.longitude;*/
 //------TESTING--------------------
-				sum += 0.0002;
+				sum += 0.00010;
 				this.$set( this.location, 0, position.coords.latitude + sum );
 //------/TESTING--------------------
 				//this.$set( this.location, 0, position.coords.latitude );
@@ -244,7 +244,7 @@
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
-//===============================================================
+				//-------
 /*				var params = this.location.concat([5000, 50.01])
 				var nearParams = this.location.concat([50, 0]);
 
@@ -289,8 +289,7 @@
 				// The response will alway replace the full messages array
 				// (When we have removed  the selected from it and also when we don't)
 				this.messages = response.data;*/
-//===============================================================
-
+				//----
 				// Parameters for searching the "long" distance messages (from 50 m to
 				// 5 km) and the near messages (From 0 to 50 m)
 				var params = this.location.concat([5000, 50.01])
@@ -313,13 +312,23 @@
 					// on the near messages (To maintain it active even if the user
 					// is not close to it)
 					this.nearMessages = [this.selected.message];
+
 					// If the previously selected was not in the 0 index, change
 					// the color of that elemnet in the list, change the index and
 					// color the first element of the messages list
 					if (this.selected.index !== 0) {
+						// Change the selected marker position on the array
+						mapData.nearMessagesMarkers.splice(this.selected.index, 1);
+						mapData.nearMessagesMarkers.unshift(this.selected.marker);
+						// Change the click event listener of the marker
+						google.maps.event.clearListeners(this.selected.marker, 'click');
+						this.selected.marker.addListener('click', () => {
+																							this.toggleMessageDetail(0);
+																						});
+
 						this.changeListMessageBackground(this.selected.index, '');
 						this.selected.index = 0;
-						this.changeListMessageBackground(0, 'gray');	
+						this.changeListMessageBackground(0, 'gray');
 					}
 
 					// Remove the selected message from the responses (It doesn't matter
@@ -581,8 +590,9 @@
 					// If we select a marker or message different from the previously
 					// selected, save it index and it message
 					this.selected.index = messageIndex;
-					this.selected.message = this.nearMessages[messageIndex];
-
+//------------------CHECK-------------------!!!!!
+					this.selected.message = this.nearMessages[messageIndex];		
+//----------------CHECK-------
 					// Save the marker and animate it
 					//this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
 					this.selected.marker =
@@ -590,7 +600,7 @@
 							(marker) => { return marker.messageId === this.selected.message._id }
 						)[0] || null;
 					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
-
+//--------------------------
 					// "Select" the message from the list (Change it background color)
 					this.changeListMessageBackground(messageIndex, 'gray');
 
