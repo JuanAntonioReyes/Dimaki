@@ -1,47 +1,47 @@
 <template>
-	<div class="posts">
-		<h1>Register user</h1>
+<div class="posts">
+	<h1>Register user</h1>
 
-		<b-form @submit="registerUser">
+	<b-form @submit="registerUser">
 
-			<b-row class="form-group">
-				<b-col tag="label" sm="3">
-					Username
-				</b-col>
-				<b-col sm="12" md="9">
-					<input type="text" class="form-control" v-model="newUser.name">
-				</b-col>
-			</b-row>
+		<b-row class="form-group">
+			<b-col tag="label" sm="3">
+				Username
+			</b-col>
+			<b-col sm="12" md="9">
+				<input type="text" class="form-control" v-model="newUser.name">
+			</b-col>
+		</b-row>
 
-			<b-row class="form-group">
-				<b-col tag="label" sm="3">
-					E-Mail
-				</b-col>
-				<b-col sm="12" md="9">
-					<input type="email" class="form-control" v-model="newUser.email">
-				</b-col>
-			</b-row>
+		<b-row class="form-group">
+			<b-col tag="label" sm="3">
+				E-Mail
+			</b-col>
+			<b-col sm="12" md="9">
+				<input type="email" class="form-control" v-model="newUser.email">
+			</b-col>
+		</b-row>
 
-			<b-row class="form-group">
-				<b-col tag="label" sm="3">
-					Password
-				</b-col>
-				<b-col sm="12" md="9">
-					<input type="password" class="form-control" v-model="newUser.pass">
-				</b-col>
-			</b-row>
+		<b-row class="form-group">
+			<b-col tag="label" sm="3">
+				Password
+			</b-col>
+			<b-col sm="12" md="9">
+				<input type="password" class="form-control" v-model="newUser.pass">
+			</b-col>
+		</b-row>
 
-			<b-row class="form-group">
-				<b-col sm="12" class="text-center">
-					<b-button type="submit" variant="success">
-						Register user
-					</b-button>
-				</b-col>
-			</b-row>
+		<b-row class="form-group">
+			<b-col sm="12" class="text-center">
+				<b-button type="submit" variant="success">
+					Register user
+				</b-button>
+			</b-col>
+		</b-row>
 
-		</b-form>
+	</b-form>
 
-	</div>
+</div>
 </template>
 
 <script>
@@ -69,7 +69,6 @@
 
     	async registerUser(e) {
     		e.preventDefault();
-
 // ==============================================================
 // TODO:
 // CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE

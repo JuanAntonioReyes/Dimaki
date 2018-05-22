@@ -1,60 +1,60 @@
 <template>
-	<div class="newMessage">
+<div class="newMessage">
 
-		<b-row class="text-center">
+	<b-row class="text-center">
 
-			<b-col sm="12" class="mb-2">
+		<b-col sm="12" class="mb-2">
 
-				<h4>Leave a new message at coords<br>
-		 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
-					{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
-				</h4>
+			<h4>Leave a new message at coords<br>
+	 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
+				{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
+			</h4>
 
-			</b-col>
+		</b-col>
 
-		</b-row>
+	</b-row>
 
-		<b-row>
-			<b-col sm="12">
+	<b-row>
+		<b-col sm="12">
 <!-- 				TEST USER <input type="text" v-model="newMessage.from"><br>
-				TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate"> -->
+			TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate"> -->
 
-				<b-form @submit="addMessage">
+			<b-form @submit="addMessage">
 
-					<b-row class="form-group">
-						<b-col sm="12" md="4" offset-md="2" class="text-center">
-							<b-form-checkbox v-model="newMessage.hidden">
-								Hidden message
-							</b-form-checkbox>
+				<b-row class="form-group">
+					<b-col sm="12" md="4" offset-md="2" class="text-center">
+						<b-form-checkbox v-model="newMessage.hidden">
+							Hidden message
+						</b-form-checkbox>
 
-						</b-col>
-						<b-col sm="12" md="4" class="text-center">
-							{{ charactersLeft }} / 600<br>
-						</b-col>
-					</b-row>
+					</b-col>
+					<b-col sm="12" md="4" class="text-center">
+						{{ charactersLeft }} / 600<br>
+					</b-col>
+				</b-row>
 
-					<b-row class="form-group">
-						<b-col sm="12" md="8" offset-md="2">
-							<textarea id="message" class="mb-2" @keyup="checkCharLeft"
-								:maxlength="maxCharacters"  rows="7"
-								placeholder="Message text..." v-model="newMessage.text" />
-						</b-col>
-					</b-row>
+				<b-row class="form-group">
+					<b-col sm="12" md="8" offset-md="2">
+						<textarea id="message" class="mb-2" @keyup="checkCharLeft"
+							:maxlength="maxCharacters"  rows="7"
+							placeholder="Message text..." v-model="newMessage.text" />
+					</b-col>
+				</b-row>
 
-					<b-row class="form-group">
-						<b-col sm="12" class="text-center">
-							<b-button type="submit" size="lg" variant="success">
-								Save message!
-							</b-button>
-						</b-col>
-					</b-row>
+				<b-row class="form-group">
+					<b-col sm="12" class="text-center">
+						<b-button type="submit" size="lg" variant="success">
+							Save message!
+						</b-button>
+					</b-col>
+				</b-row>
 
-				</b-form>
+			</b-form>
 
-			</b-col>
-		</b-row>
+		</b-col>
+	</b-row>
 
-	</div>
+</div>
 </template>
 
 <script>
@@ -128,7 +128,6 @@
 					this.newMessage.location.coordinates[0];
 				this.newMessage.location.coordinates[1] =
 					this.newMessage.location.coordinates[1];
-
 // ==============================================================
 // TODO:
 // CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
