@@ -417,20 +417,31 @@
 				mapData.nearMessagesMarkers.length = 0;*/
 				// Delete the previous markers that aren't in the new messages
 				// list (Near)
-				mapData.nearMessagesMarkers.forEach( (marker, index) => {
+				var toDeleteIndexes = [];
 
+				mapData.nearMessagesMarkers.forEach( (marker, index) => {
 					// If the marker is not in the new near messages list,
 					// remove it from the map and from the nearMessagesMarkers array
-					var inMessages = this.nearMessages.filter( (message) => { return message._id === marker.messageId } )[0] || null;
+					var inMessages = this.nearMessages.filter( (message) =>
+						{
+							return message._id === marker.messageId;
+						} )[0] || null;
 
 					if (!inMessages) {
 						marker.setMap(null);
-						var ind = mapData.nearMessagesMarkers.indexOf(marker);
-						mapData.nearMessagesMarkers.splice(ind, 1);
+						//var ind = mapData.nearMessagesMarkers.indexOf(marker);
+						toDeleteIndexes.push(mapData.nearMessagesMarkers.indexOf(marker));
+						//mapData.nearMessagesMarkers.splice(ind, 1);
 					}
 
 				});
 
+				// Wee need to delete the markers outside the forAll with filter 
+				// to not mess with the markers/index order
+				mapData.nearMessagesMarkers = mapData.nearMessagesMarkers.filter(
+					(marker, index) => {
+						return !(toDeleteIndexes.includes(index));
+					});
 
 /*				if (selectedMarker) {
 					// If we have a previous selected marker selected (It is not null)
@@ -509,7 +520,8 @@
 						var markerColor = message.hidden ? 'orange' : 'green';
 
 						// If the message is not in the markers list, add a new marker
-						var inMarkers = mapData.nearMessagesMarkers.filter( (marker) => { return marker.messageId === message._id } )[0] || null;
+						var inMarkers = mapData.nearMessagesMarkers.filter( (marker) => 
+							{ return marker.messageId === message._id } )[0] || null;
 
 						if (!inMarkers) {
 							var markerLat = message.location.coordinates[1];
