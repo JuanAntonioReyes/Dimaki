@@ -12,15 +12,15 @@
 				</h2> -->
 				<!-- Change this for the commented above when
 				the test location inputs are removed for production -->
-				<h2>
-					You are at coords
+				<h4>
+					You are at coords<br>
 					{{ Number(Number(this.location[0]).toFixed(6)) }} / 
 					{{ Number(Number(this.location[1]).toFixed(6)) }}
-				</h2>
+				</h4>
 
 				<router-link :to="{ name: 'newMessageLink' }">
-					<b-button size="lg" variant="success">
-						Leave a new message here!
+					<b-button variant="success">
+						<strong>Leave a new message here!</strong>
 					</b-button>
 				</router-link>
 
@@ -97,7 +97,7 @@
 			</b-col>
 
 			<b-col sm="12" md="6">
-				<div id="map"></div>
+				<div id="map">The map goes here</div>
 			</b-col>
 			
 		</b-row>
@@ -139,9 +139,9 @@
 
 <script>
 	import apiAccess from '../apiAccess.js';
-//------TESTING--------------------
+/*//------POSITION CHANGE TESTING--------------------
 	var sum = 0;
-//------/TESTING--------------------
+//------/POSITION CHANGE TESTING--------------------*/
 	//var checkStartLocationID;
 	var mapData = {
 									map: null,
@@ -189,6 +189,7 @@
 																					{ enableHighAccuracy : true });
 
 			this.initMap();
+			this.updateMap();
 
 			// TODO: FIX THIS CORRECTLY!
 			// Ugly solution for showing correctly the location data at start
@@ -224,11 +225,11 @@
 
 /*				this.location[0] = position.coords.latitude;
 				this.location[1] = position.coords.longitude;*/
-//------TESTING--------------------
+/*//------POSITION CHANGE TESTING--------------------
 				sum += 0.00010;
 				this.$set( this.location, 0, position.coords.latitude + sum );
-//------/TESTING--------------------
-				//this.$set( this.location, 0, position.coords.latitude );
+//------POSITION CHANGE /TESTING--------------------*/
+				this.$set( this.location, 0, position.coords.latitude );
 				this.$set( this.location, 1, position.coords.longitude );
 				
 				//this.$forceUpdate();
@@ -350,7 +351,7 @@
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
 			initMap() {
-				document.getElementById('map').textContent = "The map goes here";
+				//document.getElementById('map').textContent = "The map goes here";
 				var uluru = {lat: this.location[0], lng: this.location[1]};
 				
 				mapData.map = new google.maps.Map(document.getElementById('map'), {

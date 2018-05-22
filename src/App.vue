@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-		<b-container fluid class="mb-4" tag="header">
+		<b-container fluid class="mt-2 mb-4" tag="header">
 			<pp-header></pp-header>
 		</b-container>
     

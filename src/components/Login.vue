@@ -1,20 +1,7 @@
 <template>
 	<div class="posts">
 		<h1>Login</h1>
-<!-- 		<div class="form">
-			<div>
-				Username: <input type="text" v-model="loginData.name"><br>
-				Password: <input type="password" v-model="loginData.pass"><br>
-			</div>
-			<div>
-				<button @click="login">Login</button>
-			</div>
-		</div>
-		<router-link :to="{ name: 'registerLink' }" tag="li" class="nav-item">
-			You don't have an account? <a href="">Register now!</a>
-		</router-link> -->
 
-<!-- CONVERT THIS INTO BOOTSTRAP VUE NOTATION -->
 		<form>
 			<div class="form-group row">
 				<label class="col-sm-3">Username</label>
@@ -50,14 +37,23 @@
 	export default {
 		data() {
 			return {
+
 				loginData: {
 					name: null,
 					pass: null
 				}
+
 			}
 		},
+
 		methods: {
+
     	async login() {
+// ==============================================================
+// TODO:
+// CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
+// MAKING THE API CALL!!!!
+// ==============================================================
 				var response = await apiAccess.loginUser(this.loginData);
 
 				if (typeof(Storage) !== "undefined") {
@@ -73,7 +69,3 @@
   }
 }
 </script>
-
-<style>
-	
-</style>

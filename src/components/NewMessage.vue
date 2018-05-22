@@ -1,46 +1,70 @@
 <template>
-	<div class="posts">
-		<h1>Add Message<br>
-		<!-- ({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1> -->
-<!-- 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
-			{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
-		</h1> -->
-		<!-- Change this for the commented above when
-		the test location inputs are removed for production -->
-			({{ Number(Number(this.newMessage.location.coordinates[1]).toFixed(6)) }} / 
-			{{ Number(Number(this.newMessage.location.coordinates[0]).toFixed(6)) }})
-		</h1>
-<!-- 		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
-		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br> -->
-		TEST LATITUDE <input type="text" v-model="newMessage.location.coordinates[1]">
-		TEST LONGITUDE <input type="text" v-model="newMessage.location.coordinates[0]"><br>
-		TEST USER <input type="text" v-model="newMessage.from"><br>
-		TEST HIDDEN <input type="checkbox" v-model="newMessage.hidden"><br>
-		TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate">
+	<div class="newMessage">
 
-		<div class="form">
-			<div>
-				<textarea rows="5" cols="50" placeholder="Message text..." v-model="newMessage.text">
-				</textarea>
-			</div>
-			<div>
-				<button @click="addMessage">Add</button>
-			</div>
-		</div>
+		<b-row class="text-center">
+
+			<b-col sm="12" class="mb-2">
+
+				<h4>Leave a new message at coords<br>
+		 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
+					{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
+				</h4>
+
+			</b-col>
+
+		</b-row>
+
+		<b-row>
+			<b-col sm="12">
+<!-- 				TEST USER <input type="text" v-model="newMessage.from"><br>
+				TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate"> -->
+
+				<b-form @submit="addMessage">
+
+					<b-row class="form-group">
+						<b-col sm="12" md="4" offset-md="2" class="text-center">
+							<b-form-checkbox v-model="newMessage.hidden">
+								Hidden message
+							</b-form-checkbox>
+
+						</b-col>
+						<b-col sm="12" md="4" class="text-center">
+							{{ charactersLeft }} / 600<br>
+						</b-col>
+					</b-row>
+
+					<b-row class="form-group">
+						<b-col sm="12" md="8" offset-md="2">
+							<textarea id="message" class="mb-2" @keyup="checkCharLeft"
+								:maxlength="maxCharacters"  rows="7"
+								placeholder="Message text..." v-model="newMessage.text" />
+						</b-col>
+					</b-row>
+
+					<b-row class="form-group">
+						<b-col sm="12" class="text-center">
+							<b-button type="submit" size="lg" variant="success">
+								Save message!
+							</b-button>
+						</b-col>
+					</b-row>
+
+				</b-form>
+
+			</b-col>
+		</b-row>
+
 	</div>
 </template>
 
 <script>
-// TEMP USE OF THE SOLUTION FROM MESSAGES TO UPDATE THE DOM (ONLY WITH THE INPUTS
-// FOR TESTING)
 	import apiAccess from '../apiAccess.js';
 
-/*	// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED?
-	var checkStartLocationID;*/
-
 	export default {
+
 		data() {
 			return {
+
 				newMessage: {
 					text: null,
 					location: {
@@ -53,11 +77,16 @@
 					hidden: false,
 					to: [],
 					expirationDate: null
-				}
+				},
+
+				maxCharacters: 600,
+
+				charactersLeft: 600
 			}
 		},
+
 		mounted() {
-			this.getUser();
+			this.getUser(); // Sets the newObject.from to the logged username
 
 			this.newMessage.text = '';
 			this.newMessage.date = Date.now();
@@ -65,58 +94,47 @@
 			this.newMessage.to = [];
 			this.newMessage.expirationDate = -1;
 
-			// getCurrentPosition for testing, for real use use watchPosition
-			//navigator.geolocation.watchPosition(this.onLocation,
-			navigator.geolocation.getCurrentPosition(this.onLocation,
+			navigator.geolocation.watchPosition(this.onLocation,
 																		(error) => console.log(error),
 																		{ enableHighAccuracy : true });
-
-/*			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
-			checkStartLocationID = setInterval(this.checkValues, 1000);		*/	
-
 		},
+
 		methods: {
 
-/*			// REMOVE THIS WHEN THE TEST INPUTS ARE REMOVED
-			checkValues() { 
-				if (this.newMessage.location.coordinates[0] != 0) {
-					this.$forceUpdate();
-					clearInterval(checkStartLocationID); 
-				}
-			},*/
+			checkCharLeft() {
+				var messageTextArea = document.getElementById('message');
+				var messageSize = messageTextArea.value.length;
+
+				this.charactersLeft = (this.maxCharacters - messageSize);
+			},
 
 			onLocation(position) {
-				/*this.newMessage.location[0] = position.coords.latitude;
-				this.newMessage.location[1] = position.coords.longitude;*/
-/*				this.newMessage.location.coordinates[0] =
-					Number(position.coords.longitude.toFixed(6));
-				this.newMessage.location.coordinates[1] =
-					Number(position.coords.latitude.toFixed(6));*/
-
-/*				this.newMessage.location.coordinates[0] = position.coords.longitude;
-				this.newMessage.location.coordinates[1] = position.coords.latitude;*/
-
 				this.$set( this.newMessage.location.coordinates, 0,
 					position.coords.longitude );
 				this.$set( this.newMessage.location.coordinates, 1,
 					position.coords.latitude );
 			},
+
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();
 
 				this.newMessage.from = response.data.name;
 			},
-			async addMessage() {
 
-				// TEMPORAL PATCH WHILE I HAVE THE INPUTs FOR COORDINATE TESTING
+			async addMessage(e) {
+				e.preventDefault();
+
 				this.newMessage.location.coordinates[0] =
-					Number(this.newMessage.location.coordinates[0]);
+					this.newMessage.location.coordinates[0];
 				this.newMessage.location.coordinates[1] =
-					Number(this.newMessage.location.coordinates[1]);
+					this.newMessage.location.coordinates[1];
 
+// ==============================================================
+// TODO:
+// CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
+// MAKING THE API CALL!!!!
+// ==============================================================
 				await apiAccess.addMessage(this.newMessage);
-
-				//console.log("TOKEN: " + userToken);
 
 				this.$router.push({ name: 'messagesLink' });
 			}
@@ -125,5 +143,7 @@
 </script>
 
 <style>
-	
+	textarea {
+		width: 100%;
+	}
 </style>
