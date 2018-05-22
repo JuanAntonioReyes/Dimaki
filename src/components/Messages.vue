@@ -134,7 +134,9 @@
 
 <script>
 	import apiAccess from '../apiAccess.js';
-
+//------TESTING--------------------
+	var sum = 0;
+//------/TESTING--------------------
 	//var checkStartLocationID;
 	var mapData = {
 									map: null,
@@ -167,8 +169,8 @@
 			//console.log("LOCATION AT mounted() START: " + this.location);
 	
 			// getCurrentPosition for testing, for real use use watchPosition
-			//navigator.geolocation.watchPosition(this.onLocation,
-			navigator.geolocation.getCurrentPosition(this.onLocation,
+			navigator.geolocation.watchPosition(this.onLocation,
+			//navigator.geolocation.getCurrentPosition(this.onLocation,
 																					(error) => console.log(error),
 																					{ enableHighAccuracy : true });
 
@@ -208,8 +210,11 @@
 
 /*				this.location[0] = position.coords.latitude;
 				this.location[1] = position.coords.longitude;*/
-
-				this.$set( this.location, 0, position.coords.latitude );
+//------TESTING--------------------
+				sum += 0.00005;
+				this.$set( this.location, 0, position.coords.latitude + sum );
+//------/TESTING--------------------
+				//this.$set( this.location, 0, position.coords.latitude );
 				this.$set( this.location, 1, position.coords.longitude );
 				
 				//this.$forceUpdate();
@@ -238,8 +243,11 @@
 				} else {
 					// If we have any message selected, put that message the first
 					// on the near messages (Even if it is "Long" distance)
-					this.selected.index = 0;
-					this.toggleListMessageSelected(0);
+					if (this.selected.index !== 0) {
+						this.changeListMessageBackground(this.selected.index, '');
+						this.selected.index = 0;
+						this.changeListMessageBackground(0, 'gray');	
+					}
 
 					this.nearMessages = [this.selected.message];
 
@@ -315,26 +323,59 @@
 				mapData.userMarker.setPosition(newPoint);
 				mapData.map.setCenter(newPoint);
 
-				// - Generate messages markers for the map -
+/*				// - Generate messages markers for the map -
 				// Backup the selected marker (If isn't any selected, it will be null)
-				var selectedMarker = this.selected.marker;
-				// Delete the previous markers ("Long" distance)
+				var selectedMarker = this.selected.marker;*/
+				
+/*				// Delete the previous markers ("Long" distance)
 				mapData.messagesMarkers.forEach( (marker) => {
 					marker.setMap(null);
 				});
-				mapData.messagesMarkers.length = 0;
-				// Delete the previous markers (Near)
+				mapData.messagesMarkers.length = 0;*/
+				// Delete the previous markers that aren't in the new messages
+				// list ("Long" distance)
+				mapData.messagesMarkers.forEach( (marker, index) => {
+
+					// If the marker is not in the new near messages list,
+					// remove it from the map and from the nearMessagesMarkers array
+					var inMessages = this.messages.filter( (message) => { return message._id === marker.messageId } )[0] || null;
+
+					if (!inMessages) {
+						marker.setMap(null);
+						var ind = mapData.messagesMarkers.indexOf(marker);
+						mapData.messagesMarkers.splice(ind, 1);
+					}
+
+				});
+
+/*				// Delete the previous markers (Near)
 				mapData.nearMessagesMarkers.forEach( (marker) => {
 					marker.setMap(null);
 				});
-				mapData.nearMessagesMarkers.length = 0;
+				mapData.nearMessagesMarkers.length = 0;*/
+				// Delete the previous markers that aren't in the new messages
+				// list (Near)
+				mapData.nearMessagesMarkers.forEach( (marker, index) => {
 
-				if (selectedMarker) {
+					// If the marker is not in the new near messages list,
+					// remove it from the map and from the nearMessagesMarkers array
+					var inMessages = this.nearMessages.filter( (message) => { return message._id === marker.messageId } )[0] || null;
+
+					if (!inMessages) {
+						marker.setMap(null);
+						var ind = mapData.nearMessagesMarkers.indexOf(marker);
+						mapData.nearMessagesMarkers.splice(ind, 1);
+					}
+
+				});
+
+
+/*				if (selectedMarker) {
 					// If we have a previous selected marker selected (It is not null)
 					selectedMarker.setMap(mapData.map);
 					mapData.nearMessagesMarkers.push(selectedMarker);
 					selectedMarker.setAnimation(google.maps.Animation.BOUNCE);
-				}
+				}*/
 
 				// Generate the new markers and insert them in the map
 				var newMessageMarker;
@@ -342,40 +383,45 @@
 				// ("Long" distance)
 				this.messages.forEach( (message, index) => {
 					
-					var markerLat = message.location.coordinates[1];
-					var markerLon = message.location.coordinates[0];
-					var uluru = { lat: markerLat, lng: markerLon };
+					// If the message is not in the markers list, add a new marker
+					var inMarkers = mapData.nearMessagesMarkers.filter( (marker) => { return marker.messageId === message._id } )[0] || null;
 
-					newMessageMarker = new google.maps.Marker({
-						position: uluru,
-						icon: {
-							path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
-							strokeColor: 'red',
-							scale: 4,
-							strokeWeight: 4
-						},
-						map: mapData.map,
-						messageId: message._id
-					});
-					
-					newMessageMarker.addListener('click', () => {
-																				this.toggleMessageDetail(-2);
-																			});
+					if (!inMarkers) {
+						var markerLat = message.location.coordinates[1];
+						var markerLon = message.location.coordinates[0];
+						var uluru = { lat: markerLat, lng: markerLon };
 
-					mapData.messagesMarkers.push(newMessageMarker);
+						newMessageMarker = new google.maps.Marker({
+							position: uluru,
+							icon: {
+								path: google.maps.SymbolPath.BACKWARD_OPEN_ARROW,
+								strokeColor: 'red',
+								scale: 4,
+								strokeWeight: 4
+							},
+							map: mapData.map,
+							messageId: message._id
+						});
+						
+						newMessageMarker.addListener('click', () => {
+																					this.toggleMessageDetail(-2);
+																				});
+
+						mapData.messagesMarkers.push(newMessageMarker);
+					}
 
 				});
 
 				// (Near)
 				this.nearMessages.forEach( (message, index) => {
 
-					// If we don't have a selected marker or the selected marker
+/*					// If we don't have a selected marker or the selected marker
 					// corresponds to a different message, we add a new marker
 					// for that message
-					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {
+					if (!selectedMarker || (message._id !== selectedMarker.messageId)) {*/
 
-/*						var markerLat = message.location[0];
-						var markerLon = message.location[1];*/
+						/*//var markerLat = message.location[0];
+						//var markerLon = message.location[1];
 						var markerLat = message.location.coordinates[1];
 						var markerLon = message.location.coordinates[0];
 						var uluru = { lat: markerLat, lng: markerLon };
@@ -396,17 +442,44 @@
 																					this.toggleMessageDetail(index);
 																				});
 
-						mapData.nearMessagesMarkers.push(newMessageMarker);
+						mapData.nearMessagesMarkers.push(newMessageMarker);*/
 
-					}
+						// If the message is not in the markers list, add a new marker
+						var inMarkers = mapData.nearMessagesMarkers.filter( (marker) => { return marker.messageId === message._id } )[0] || null;
+
+						if (!inMarkers) {
+							var markerLat = message.location.coordinates[1];
+							var markerLon = message.location.coordinates[0];
+							var uluru = { lat: markerLat, lng: markerLon };
+
+							newMessageMarker = new google.maps.Marker({
+								position: uluru,
+								icon: {
+									path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+									strokeColor: 'green',
+									scale: 5,
+									strokeWeight: 5
+								},
+								map: mapData.map,
+								messageId: message._id
+							});
+							
+							newMessageMarker.addListener('click', () => {
+																						this.toggleMessageDetail(index);
+																					});
+
+							mapData.nearMessagesMarkers.push(newMessageMarker);
+						}
+
+/*					}*/
 				});
 
 			},
 			toggleMessageDetail(messageIndex) {
-				// MessageIndex meaning:
-				// undefined (From the dismiss button - It will be the same as selected)
+				// MessageIndex:
 				// -1 (No selected), -2 (Out of range), 0 to n (Near message)
-
+				
+				// If the user clicks the dismiss button of the alert
 				if (messageIndex === undefined) {
 					messageIndex = this.selected.index;
 				}
@@ -415,13 +488,13 @@
 					// If we have a previously selected marker, stop it animation and
 					// remove it from selected
 					// This needs to happen if we select a new marker or if we deselect
-					// one previously selected,but not if we select an out of range
+					// one previously selected, but not if we select an out of range
 					// marker (-2)
 					this.selected.marker.setAnimation(null);
 					this.selected.marker = null;
 
 					// "Deselect" the message from the list (Change it background color)
-					this.toggleListMessageSelected(this.selected.index);
+					this.changeListMessageBackground(this.selected.index, '');
 				}
 
 				if (messageIndex === -2) {
@@ -435,15 +508,20 @@
 					this.selected.message = this.nearMessages[messageIndex];
 
 					// Save the marker and animate it
-					this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
+					//this.selected.marker = mapData.nearMessagesMarkers[messageIndex];
+					this.selected.marker =
+						mapData.nearMessagesMarkers.filter(
+							(marker) => { return marker.messageId === this.selected.message._id }
+						)[0] || null;
 					this.selected.marker.setAnimation(google.maps.Animation.BOUNCE);
 
 					// "Select" the message from the list (Change it background color)
-					this.toggleListMessageSelected(messageIndex);
+					this.changeListMessageBackground(messageIndex, 'gray');
 
 					// Show the message detail
 					this.showMessageDetail = true;
 				} else {
+					// If the same message is selected, we need to deselect it
 					// Remove the message and the index from selected
 					this.selected.index = -1;
 					this.selected.message = null;
@@ -453,16 +531,18 @@
 				}
 
 			},
-			toggleListMessageSelected(index) {
+			changeListMessageBackground(index, background) {
 					
 				var messagesList = document.getElementById('nearMessagesList').tBodies;
 				var prevStyle = messagesList[index].style;
 
-				if (prevStyle.background === "") {
+/*				if (prevStyle.background === "") {
 					prevStyle.background = "gray";
 				} else {
 					prevStyle.background = "";
-				}
+				}*/
+
+				prevStyle.background = background;
 
 			}
 

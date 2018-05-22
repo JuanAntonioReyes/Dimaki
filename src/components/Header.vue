@@ -6,9 +6,9 @@
 				<img src="../assets/logoH.png" class="img-fluid" alt="Dimakí logo">
 			</a>
 		</b-col>
-		
+
 		<b-col sm="12" md="3">
-			<strong v-if="loggedUser">
+			<strong v-if="userLogged">
 				<a href="" @click="logout">Logout</a>
 			</strong>
 			<strong v-else>
@@ -24,20 +24,25 @@
 <script>
 
 	export default {
-		data() {
+/*		data() {
 			return {
-				loggedUser: false
+				//loggedUser: false
+			}
+		},*/
+		computed: {
+			userLogged: function () {
+				return (localStorage.getItem("userToken") !== null);
 			}
 		},
-		created() {
+/*		created() {
 			if (localStorage.getItem("userToken")) {
 				this.loggedUser = true;
 			}
-		},
+		},*/
 		methods: {
 			logout() {
 				localStorage.removeItem("userToken");
-				console.log("LOGGED OUT");
+				//console.log("LOGGED OUT");
 			}
   	}
 	}

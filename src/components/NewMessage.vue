@@ -2,8 +2,13 @@
 	<div class="posts">
 		<h1>Add Message<br>
 		<!-- ({{ newMessage.location[0] }} / {{ newMessage.location[1] }})</h1> -->
-			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
+<!-- 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
 			{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
+		</h1> -->
+		<!-- Change this for the commented above when
+		the test location inputs are removed for production -->
+			({{ Number(Number(this.newMessage.location.coordinates[1]).toFixed(6)) }} / 
+			{{ Number(Number(this.newMessage.location.coordinates[0]).toFixed(6)) }})
 		</h1>
 <!-- 		TEST LATITUDE <input type="text" v-model="newMessage.location[0]">
 		TEST LONGITUDE <input type="text" v-model="newMessage.location[1]"><br> -->
@@ -92,9 +97,9 @@
 				this.newMessage.location.coordinates[1] = position.coords.latitude;*/
 
 				this.$set( this.newMessage.location.coordinates, 0,
-					position.coords.latitude );
-				this.$set( this.newMessage.location.coordinates, 1,
 					position.coords.longitude );
+				this.$set( this.newMessage.location.coordinates, 1,
+					position.coords.latitude );
 			},
 			async getUser() {
 				var response = await apiAccess.getLoggedUser();
