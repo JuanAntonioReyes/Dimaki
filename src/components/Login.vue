@@ -60,8 +60,12 @@
     	async login() {
 				var response = await apiAccess.loginUser(this.loginData);
 
-				// TODO: Before this, I should check if the browser supports localStorage
-				localStorage.setItem("userToken", response.data.token);
+				if (typeof(Storage) !== "undefined") {
+					localStorage.setItem("userToken", response.data.token);
+				} else {
+					alert("Your browser does not support user token control\n" +
+								"Please, update your browser to continue using this app");
+				}
 
 				this.$router.push({ name: 'messagesLink' });
 			}
