@@ -4,6 +4,8 @@
 
 	<b-form @submit="registerUser">
 
+		<span id="info"></span>
+
 		<b-row class="form-group">
 			<b-col tag="label" sm="3">
 				Username
@@ -76,16 +78,23 @@
 // ==============================================================
 				var response = await apiAccess.registerUser(this.newUser);
 
-				if (typeof(Storage) !== "undefined") {
-					localStorage.setItem("userToken", response.data.token);
-				} else {
-					alert("Your browser does not support user token control\n" +
-								"Please, update your browser to continue using this app");
-				}
+					if (typeof(Storage) !== "undefined") {
+						localStorage.setItem("userToken", response.data.token);
+					} else {
+						alert("Your browser does not support user token control\n" +
+									"Please, update your browser to continue using this app");
+					}
 
-				this.$router.push({ name: 'messagesLink' });
+					this.$router.push({ name: 'messagesLink' });
 			}
 
   }
 }
 </script>
+
+<style>
+	#info {
+		font-weight: bold;
+		color: red;
+	}
+</style>
