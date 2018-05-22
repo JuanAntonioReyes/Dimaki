@@ -230,8 +230,8 @@
 			},
 			async getMessages() {
 				//console.log("LOCATION AT getMessages() START: " + this.location);
-
-				var params = this.location.concat([5000, 50.01])
+//===============================================================
+/*				var params = this.location.concat([5000, 50.01])
 				var nearParams = this.location.concat([50, 0]);
 
 				var response = await apiAccess.fetchMessages(params);
@@ -274,7 +274,51 @@
 
 				// The response will alway replace the full messages array
 				// (When we have removed  the selected from it and also when we don't)
-				this.messages = response.data;
+				this.messages = response.data;*/
+//===============================================================
+
+				// Parameters for searching the "long" distance messages (from 50 m to
+				// 5 km) and the near messages (From 0 to 50 m)
+				var params = this.location.concat([5000, 50.01])
+				var nearParams = this.location.concat([50, 0]);
+
+				// Get the messages ("Long" distance and near)
+				var response = await apiAccess.fetchMessages(params);
+				var responseNear = await apiAccess.fetchMessages(nearParams);
+
+				// Delete the previous messages
+				this.messages.length = 0;
+				this.nearMessages.length = 0;
+
+				if (this.selected.message) {
+					// If we have any message selected, put that message the first
+					// on the near messages (To maintain it active even if the user
+					// is not close to it)
+					this.nearMessages = [this.selected.message];
+					// If the previously selected was not in the 0 index, change
+					// the color of that elemnet in the list, change the index and
+					// color the first element of the messages list
+					if (this.selected.index !== 0) {
+						this.changeListMessageBackground(this.selected.index, '');
+						this.selected.index = 0;
+						this.changeListMessageBackground(0, 'gray');	
+					}
+
+					// Remove the selected message from the responses (It doesn't matter
+					// in what response it is)
+					response.data = response.data.filter(
+							(message) => {
+								return message._id !== this.selected.message._id;
+							});
+					responseNear.data = responseNear.data.filter(
+							(message) => {
+								return message._id !== this.selected.message._id;
+							});
+				}
+
+				// Add the responses to their corresponding message array
+				this.messages = this.messages.concat(response.data);
+				this.nearMessages = this.nearMessages.concat(responseNear.data);
 
 				//console.log("LOCATION AT getMessages() END: " + this.location);
 			},
