@@ -4,6 +4,8 @@
 
 	<b-form @submit="login">
 
+		<span id="info"></span>
+
 		<b-row class="form-group">
 			<b-col tag="label" sm="3">
 				Username
@@ -60,23 +62,32 @@
 
     	async login(e) {
     		e.preventDefault();
-// ==============================================================
-// TODO:
-// CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
-// MAKING THE API CALL!!!!
-// ==============================================================
-				var response = await apiAccess.loginUser(this.loginData);
 
-				if (typeof(Storage) !== "undefined") {
-					localStorage.setItem("userToken", response.data.token);
+				var infoSpan = document.getElementById('info');
+				
+				if (this.loginData.name && this.loginData.pass) {
+					
+					apiAccess.loginUser(this.loginData)
+					.then((response) => {
+						if (typeof(Storage) !== "undefined") {
+							localStorage.setItem("userToken", response.data.token);
+						} else {
+							alert("Your browser does not support user token control\n" +
+										"Please, update your browser to continue using this app");
+						}
+
+						this.$emit('login', true);
+
+						this.$router.push({ name: 'messagesLink' });
+					})
+					.catch((error) => {
+						infoSpan.textContent = error.response.data.message;
+					});
+
 				} else {
-					alert("Your browser does not support user token control\n" +
-								"Please, update your browser to continue using this app");
+					infoSpan.textContent = "You must fill all the fields";
 				}
 
-				this.$emit('login', true);
-
-				this.$router.push({ name: 'messagesLink' });
 			}
 	
   }

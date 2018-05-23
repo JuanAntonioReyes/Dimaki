@@ -5,21 +5,32 @@
 
 		<b-col sm="12" class="mb-2">
 
-			<h4>Leave a new message at coords<br>
-	 			({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
+			<h4 v-if="availableLocation">
+				Leave a new message at coords<br>
+				({{ Number(this.newMessage.location.coordinates[1].toFixed(6)) }} / 
 				{{ Number(this.newMessage.location.coordinates[0].toFixed(6)) }})
 			</h4>
+			<div v-else>
+				<h4>
+					Getting your geoposition...
+				</h4>
+				<h5>
+					Wait a moment
+				</h5>
+			</div>
 
 		</b-col>
 
 	</b-row>
 
-	<b-row>
+	<b-row class="text-center">
 		<b-col sm="12">
 <!-- 				TEST USER <input type="text" v-model="newMessage.from"><br>
 			TEST EXPIRATION <input type="text" v-model="newMessage.expirationDate"> -->
 
 			<b-form @submit="addMessage">
+
+				<span id="info"></span>
 
 				<b-row class="form-group">
 					<b-col sm="12" md="4" offset-md="2" class="text-center">
@@ -71,12 +82,7 @@
 						type: 'Point',
 						coordinates: [0, 0]
 					},
-					date: null,
-					from: null,
-					public: false,
-					hidden: false,
-					to: [],
-					expirationDate: null
+					hidden: null
 				},
 
 				maxCharacters: 600,
@@ -85,14 +91,18 @@
 			}
 		},
 
-		mounted() {
-			this.getUser(); // Sets the newObject.from to the logged username
+		computed: {
 
+			availableLocation() {
+				return (this.newMessage.location.coordinates[0] || 
+								this.newMessage.location.coordinates[1]);
+			}
+
+		},
+
+		mounted() {
 			this.newMessage.text = '';
-			this.newMessage.date = Date.now();
-			this.newMessage.public = true;
-			this.newMessage.to = [];
-			this.newMessage.expirationDate = -1;
+			this.newMessage.hidden = false;
 
 			navigator.geolocation.watchPosition(this.onLocation,
 																		(error) => console.log(error),
@@ -115,30 +125,34 @@
 					position.coords.latitude );
 			},
 
-			async getUser() {
-				var response = await apiAccess.getLoggedUser();
-
-				this.newMessage.from = response.data.name;
-			},
-
 			async addMessage(e) {
 				e.preventDefault();
 
-				this.newMessage.location.coordinates[0] =
-					this.newMessage.location.coordinates[0];
-				this.newMessage.location.coordinates[1] =
-					this.newMessage.location.coordinates[1];
-// ==============================================================
-// TODO:
-// CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
-// MAKING THE API CALL!!!!
-// ==============================================================
-				await apiAccess.addMessage(this.newMessage);
+				var infoSpan = document.getElementById('info');
+				
+/*				if (this.newMessage.location.coordinates[0] || 
+						this.newMessage.location.coordinates[1]) {*/
+					if (true) {
 
-				this.$router.push({ name: 'messagesLink' });
+						if (this.newMessage.text) {
+							apiAccess.addMessage(this.newMessage)
+							.then((response) => {
+								this.$router.push({ name: 'messagesLink' });
+							})
+							.catch((error) => {
+								infoSpan.textContent = error.response.data.message;
+							});
+						} else {
+							infoSpan.textContent = "The message cannot be empty";
+						}
+
+				} else {
+					infoSpan.textContent = "Wait a moment while we get your geoposition";
+				}
+
 			}
-  }
-}
+  	}
+	}
 </script>
 
 <style>

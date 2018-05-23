@@ -47,5 +47,8 @@ export default {
 </script>
 
 <style>
-
+  #info {
+    font-weight: bold;
+    color: red;
+  }
 </style>

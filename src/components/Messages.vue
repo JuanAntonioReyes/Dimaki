@@ -4,11 +4,19 @@
 	<b-row class="text-center">
 		<b-col sm="12" class="mb-4">
 
-			<h4>
+			<h4 v-if="availableLocation">
 				You are at coords<br>
 				{{ Number(this.location[0].toFixed(6)) }} / 
 				{{ Number(this.location[1].toFixed(6)) }}
 			</h4>
+			<div v-else>
+				<h4>
+					Getting your geoposition...
+				</h4>
+				<h5>
+					Wait a moment
+				</h5>
+			</div>
 
 			<router-link :to="{ name: 'newMessageLink' }">
 				<b-button variant="success">
@@ -58,50 +66,61 @@
 			</b-alert>
 			<!-- /MESSAGE DETAIL -->
 			
-			<div v-if="noNearMessages" class="text-center">
+			<div v-if="availableLocation">
+				<div v-if="noNearMessages" class="text-center">
 
-				<h3>
-					There isn't any messages in this area<br>
-					<router-link :to="{ name: 'newMessageLink' }">
-						Leave one now!
-					</router-link>
-				</h3>
+					<h3>
+						There isn't any messages in this area<br>
+						<router-link :to="{ name: 'newMessageLink' }">
+							Leave one now!
+						</router-link>
+					</h3>
 
+				</div>
+				<table v-else id="nearMessagesList" class="table table-hover">
+
+					<thead class="thead-default">
+						<tr>
+							<th>Message</th>
+							<th>Latitude</th>
+							<th>Longitude</th>
+						</tr>
+					</thead>
+
+					<tbody v-for="(message, messageIndex) in nearMessages">
+
+						<tr @click="toggleMessageDetail(messageIndex)">
+							<td>
+								{{ message.text.length > 10?
+									(message.text.substring(0, 10) + '...'):
+									message.text }}
+							</td>
+							<td>
+								{{ message.location.coordinates[1] }}
+							</td>
+							<td>
+								{{ message.location.coordinates[0] }}
+							</td>
+						</tr>
+
+					</tbody>
+
+				</table>
 			</div>
-			<table v-else id="nearMessagesList" class="table table-hover">
-
-				<thead class="thead-default">
-					<tr>
-						<th>Message</th>
-						<th>Latitude</th>
-						<th>Longitude</th>
-					</tr>
-				</thead>
-
-				<tbody v-for="(message, messageIndex) in nearMessages">
-
-					<tr @click="toggleMessageDetail(messageIndex)">
-						<td>
-							{{ message.text.length > 10?
-								(message.text.substring(0, 10) + '...'):
-								message.text }}
-						</td>
-						<td>
-							{{ message.location.coordinates[1] }}
-						</td>
-						<td>
-							{{ message.location.coordinates[0] }}
-						</td>
-					</tr>
-
-				</tbody>
-
-			</table>
+			<div v-else class="text-center">
+				<h4>
+					Loading messages...
+				</h4>
+			</div>
 
 		</b-col>
 
 		<b-col sm="12" md="6">
-			<div id="map">The map goes here</div>
+			<div id="map">
+				<h4>
+					Loading map...
+				</h4>
+			</div>
 		</b-col>
 		
 	</b-row>
@@ -158,6 +177,10 @@
 				}
 
 				return variant;
+			},
+
+			availableLocation() {
+				return (this.location[0] || this.location[1]);
 			}
 
 		},

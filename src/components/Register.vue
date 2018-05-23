@@ -56,45 +56,43 @@
 				newUser: {
 					name: null,
 					pass: null,
-					email: null,
-					registerDate: null
+					email: null
 				}
 
 			}
-		},
-
-		mounted() {
-			this.newUser.registerDate = Date.now();
 		},
 
 		methods: {
 
     	async registerUser(e) {
     		e.preventDefault();
-// ==============================================================
-// TODO:
-// CHECK HERE THAT ALL THE DATA IS SAVED AND CORRECT BEFORE
-// MAKING THE API CALL!!!!
-// ==============================================================
-				var response = await apiAccess.registerUser(this.newUser);
 
-					if (typeof(Storage) !== "undefined") {
-						localStorage.setItem("userToken", response.data.token);
-					} else {
-						alert("Your browser does not support user token control\n" +
-									"Please, update your browser to continue using this app");
-					}
+				var infoSpan = document.getElementById('info');
+				
+				if (this.newUser.name && this.newUser.pass && this.newUser.email) {
+					
+					apiAccess.registerUser(this.newUser)
+					.then((response) => {
+						if (typeof(Storage) !== "undefined") {
+							localStorage.setItem("userToken", response.data.token);
+						} else {
+							alert("Your browser does not support user token control\n" +
+										"Please, update your browser to continue using this app");
+						}
 
-					this.$router.push({ name: 'messagesLink' });
+						this.$emit('login', true);
+
+						this.$router.push({ name: 'messagesLink' });
+					})
+					.catch((error) => {
+						infoSpan.textContent = error.response.data.message;
+					});
+
+				} else {
+					infoSpan.textContent = "You must fill all the fields";
+				}
 			}
 
   }
 }
 </script>
-
-<style>
-	#info {
-		font-weight: bold;
-		color: red;
-	}
-</style>
