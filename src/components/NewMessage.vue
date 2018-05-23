@@ -130,9 +130,8 @@
 
 				var infoSpan = document.getElementById('info');
 				
-/*				if (this.newMessage.location.coordinates[0] || 
-						this.newMessage.location.coordinates[1]) {*/
-					if (true) {
+				if (this.newMessage.location.coordinates[0] || 
+						this.newMessage.location.coordinates[1]) {
 
 						if (this.newMessage.text) {
 							apiAccess.addMessage(this.newMessage)
