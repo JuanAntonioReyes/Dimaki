@@ -349,7 +349,7 @@
 					markerIcon = google.maps.SymbolPath.BACKWARD_OPEN_ARROW;
 					markerColor = 'red';
 					detailIndex = -2;
-				} else if ((type === 1) || (type === 2)) {
+				} else if (type === 1) {
 					markerIcon = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
 					detailIndex = index;
 					markerColor = message.hidden ? 'orange' : 'green';
@@ -375,7 +375,11 @@
 																			this.toggleMessageDetail(detailIndex);
 																		});
 
-				mapData.messagesMarkers.push(newMessageMarker);
+				if (type === 0) {
+					mapData.messagesMarkers.push(newMessageMarker);
+				} else if (type === 1) {
+					mapData.nearMessagesMarkers.push(newMessageMarker);
+				}
 			},
 
 			addNewMarkers() {
