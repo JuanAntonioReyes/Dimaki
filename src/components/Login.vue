@@ -74,6 +74,8 @@
 								"Please, update your browser to continue using this app");
 				}
 
+				this.$emit('login', true);
+
 				this.$router.push({ name: 'messagesLink' });
 			}
 	
