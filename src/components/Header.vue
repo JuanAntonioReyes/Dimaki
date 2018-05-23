@@ -10,7 +10,7 @@
 	<b-col sm="12" md="1" offset-md="3" class="text-center pt-3">
 
 		<strong v-if="userLogged">
-			<router-link :to="{}">
+			<router-link :to="{ name: 'messagesLink' }">
 				<a href="" @click="logout">Logout</a>
 			</router-link>
 		</strong>
