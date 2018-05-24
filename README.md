@@ -6,7 +6,20 @@
 
 (The API connection uses connection data from "config/config.js", but for security reasons, only "config.js.dist" with the data structure will be uploaded)
 
-## Usage
+## Installation
 - Clone or download repository
-- $ npm install
-- $ npm start
+
+- Install the dependencies
+
+```
+npm install
+```
+
+- Configure the MongoDB and token secret in config/config.js (Template provided in 'config/config.js.dist')
+
+## Usage
+- Start the server
+
+```
+npm run dev
+```
