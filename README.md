@@ -18,7 +18,7 @@ npm install
 - Configure the API URL in config/config.js (Template provided in 'config/config.js.dist')
 
 ## Usage
-- Start the server
+- Launch the project
 
 ```
 npm run dev
