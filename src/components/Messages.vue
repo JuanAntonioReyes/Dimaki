@@ -296,9 +296,9 @@
 				});
 
 				circleNear.bindTo('center', mapData.userMarker, 'position');
-      },
+			},
 
-      updateMap() {
+			updateMap() {
 				// Set the user marker position
 				var newPoint = new google.maps.LatLng(this.location[0],
 																							this.location[1]);
