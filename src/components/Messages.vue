@@ -91,9 +91,7 @@
 
 						<tr @click="toggleMessageDetail(messageIndex)">
 							<td>
-								{{ message.text.length > 10?
-									(message.text.substring(0, 10) + '...'):
-									message.text }}
+								{{ messageText(message) }}
 							</td>
 							<td>
 								{{ message.location.coordinates[1] }}
@@ -195,6 +193,14 @@
 		},
 
 		methods: {
+
+			messageText(message) {
+				if (message.text.length > 10) {
+					return (message.text.substring(0, 10) + '...');
+				}
+
+				return message.text;
+			},
 
 			onLocation(position) {
 /*//====== POSITION CHANGE TESTING ==========
