@@ -1,8 +1,6 @@
 <template>
 <div class="messages">
 
-	<b-btn v-b-modal.outOfRangeModal>Launch demo modal</b-btn>
-
 	<!-- Out of range message modal -->
 	<b-modal ref="outOfRangeModal" title="Out of range message" size="sm" centered header-bg-variant="danger"
 		header-text-variant="light" ok-variant="outline-danger" ok-only >
