@@ -1,6 +1,19 @@
 <template>
 <div class="messages">
 
+	<b-btn v-b-modal.outOfRangeModal>Launch demo modal</b-btn>
+
+	<!-- Out of range message modal -->
+	<b-modal ref="outOfRangeModal" title="Out of range message" size="sm" centered header-bg-variant="danger"
+		header-text-variant="light" ok-variant="outline-danger" ok-only >
+
+		<p class="text-center">
+			This message is out of range<br>
+			You must be closer to read it
+		</p>
+
+	</b-modal>
+
 	<b-row class="text-center">
 		<b-col sm="12" class="mb-4">
 
@@ -463,8 +476,7 @@
 
 				if (messageIndex === -2) {
 					// If we select a marker out of range
-					alert("This message is out of range\n" +
-								"You must be closer to read it");
+					this.$refs.outOfRangeModal.show();
 				} else if (messageIndex !== this.selected.index) {
 					// If we select a marker or message different from the previously
 					// selected, save it index and it message
