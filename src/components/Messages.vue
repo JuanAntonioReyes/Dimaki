@@ -228,10 +228,12 @@
 			},
 
 			async getMessages() {
-				// Parameters for searching the "long" distance messages (from 50 m to
-				// 5 km) and the near messages (From 0 to 50 m)
-				var params = this.location.concat([5000, 50.01])
-				var nearParams = this.location.concat([50, 0]);
+				// Parameters [minDistance, maxDistance] for searching the "long"
+				// distance messages (from 50.01 m to 5 km) and the near messages
+				// (From 0 to 50 m)
+				// (If we don't want a limit, we need to use 0 as maxDistance
+				var params = this.location.concat([50.01, 5000])
+				var nearParams = this.location.concat([0, 50]);
 
 				// Get the messages ("Long" distance and near)
 				var response = await apiAccess.fetchMessages(params);
