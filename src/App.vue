@@ -5,7 +5,7 @@
 		</b-container>
     
     <b-container>
-      <router-view @login="onLoginLogout"></router-view>
+      <router-view @loginLogout="onLoginLogout"></router-view>
     </b-container>
     
 		<b-container fluid class="mt-4" tag="footer">

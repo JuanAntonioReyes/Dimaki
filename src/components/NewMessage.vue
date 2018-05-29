@@ -139,7 +139,18 @@
 								this.$router.push({ name: 'messagesLink' });
 							})
 							.catch((error) => {
-								infoSpan.textContent = error.response.data.message;
+
+								if (error.response.data.message === "jwt expired") {
+
+									localStorage.removeItem("userToken");
+									
+									this.$emit('loginLogout', false);
+									this.$router.push({ name: 'loginLink' });
+
+								} else {
+									infoSpan.textContent = error.response.data.message;
+								}
+
 							});
 						} else {
 							infoSpan.textContent = "The message cannot be empty";
