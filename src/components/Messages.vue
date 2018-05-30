@@ -139,6 +139,8 @@
 
 <script>
 	import apiAccess from '../apiAccess.js';
+	import markerClusterer from '../js/vendor/markerclusterer.js';
+
 /*//====== POSITION CHANGE TESTING ==========
 // I use this values to simulate movement
 	var sumLat = 0;
@@ -320,7 +322,7 @@
 
 				// Create the marker cluster
 				var markerClusterImages =
-					{ imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' };
+					{ imagePath: '../../static/markerClusterImg/m' };
 				mapData.markerCluster = new MarkerClusterer(mapData.map, [], markerClusterImages);
       
 			},
