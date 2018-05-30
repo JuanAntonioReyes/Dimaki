@@ -148,7 +148,8 @@
 									map: null,
 									userMarker: null,
 									messagesMarkers: [],
-									nearMessagesMarkers: []
+									nearMessagesMarkers: [],
+									markerCluster: null
 								};
 
 	export default {
@@ -232,7 +233,8 @@
 				// distance messages (from 50.01 m to 5 km) and the near messages
 				// (From 0 to 50 m)
 				// (If we don't want a limit, we need to use 0 as maxDistance
-				var params = this.location.concat([50.01, 5000])
+				//var params = this.location.concat([50.01, 5000]);
+				var params = this.location.concat([50.01, 0]);
 				var nearParams = this.location.concat([0, 50]);
 
 				// Get the messages ("Long" distance and near)
@@ -315,6 +317,12 @@
 				});
 
 				circleNear.bindTo('center', mapData.userMarker, 'position');
+
+				// Create the marker cluster
+				var markerClusterImages =
+					{ imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' };
+				mapData.markerCluster = new MarkerClusterer(mapData.map, [], markerClusterImages);
+      
 			},
 
 			updateMap() {
@@ -429,9 +437,8 @@
 
 				// ("Long" distance)
 				this.messages.forEach( (message, index) => {
-					
 					// If the message is not in the markers list, add a new marker
-					var inMarkers = mapData.nearMessagesMarkers.filter( (marker) =>
+					var inMarkers = mapData.messagesMarkers.filter( (marker) =>
 						{ return marker.messageId === message._id } )[0] || null;
 
 					if (!inMarkers) {
@@ -450,6 +457,12 @@
 							this.addMarker(message, index, 1);
 						}
 				});
+
+				// Add the newly generated markers to the marker cluster
+				mapData.markerCluster.clearMarkers();
+				mapData.markerCluster.addMarkers(mapData.messagesMarkers);
+				mapData.markerCluster.addMarkers(mapData.nearMessagesMarkers);
+
 			},
 
 			toggleMessageDetail(messageIndex) {
