@@ -151,7 +151,8 @@
 									userMarker: null,
 									messagesMarkers: [],
 									nearMessagesMarkers: [],
-									markerCluster: null
+									markerCluster: null,
+									autoCenter: true
 								};
 
 	export default {
@@ -325,6 +326,48 @@
 					{ imagePath: '../../static/markerClusterImg/m' };
 				mapData.markerCluster = new MarkerClusterer(mapData.map, [], markerClusterImages);
       
+      	// CENTER MAP CONTROL
+				// (Based on the Google Maps API Custom Control example
+				function CenterControl(controlDiv, map) {
+
+					var controlUI = document.createElement('div');
+					controlUI.style.backgroundColor = '#fff';
+					controlUI.style.border = '2px solid #fff';
+					controlUI.style.borderRadius = '3px';
+					controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+					controlUI.style.cursor = 'pointer';
+					controlUI.style.marginBottom = '22px';
+					controlUI.style.textAlign = 'center';
+					controlUI.title = 'Click to recenter the map';
+					controlDiv.appendChild(controlUI);
+
+					var controlText = document.createElement('div');
+					controlText.style.color = 'rgb(25,25,25)';
+					controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+					controlText.style.fontSize = '16px';
+					controlText.style.lineHeight = '38px';
+					controlText.style.paddingLeft = '5px';
+					controlText.style.paddingRight = '5px';
+					controlText.innerHTML = 'Center Map';
+					controlUI.appendChild(controlText);
+
+					controlUI.addEventListener('click', function() {
+						// Center on the user marker, reset the map zoom and reactivate the autoCenter
+						map.setCenter(mapData.userMarker.position);
+						map.setZoom(18);
+						mapData.autoCenter = true;
+					});
+
+				}
+
+				var centerControlDiv = document.createElement('div');
+				var centerControl = new CenterControl(centerControlDiv, mapData.map);
+				centerControlDiv.index = 1;
+				mapData.map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+				// If the user drags the map, disable the autoCenter
+				mapData.map.addListener('dragstart', () => { mapData.autoCenter = false; });
+
 			},
 
 			updateMap() {
@@ -333,7 +376,9 @@
 																							this.location[1]);
 
 				mapData.userMarker.setPosition(newPoint);
-				mapData.map.setCenter(newPoint);
+				if (mapData.autoCenter) {
+					mapData.map.setCenter(newPoint);
+				}
 
 				// Delete the previous markers that are not in the new messages lists
 				this.removeOldMarkers();
