@@ -23,3 +23,7 @@ npm install
 ```
 npm run dev
 ```
+
+## Changelog
+- v1.0.0 (Basic functions, public messages, user login and registration)
+- v1.1.0 (All messages showing in map, marker clusters, outy of range alert changed to modal)

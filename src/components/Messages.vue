@@ -17,8 +17,8 @@
 
 			<h4 v-if="availableLocation">
 				You are at coords<br>
-				{{ Number(this.location[0].toFixed(6)) }} / 
-				{{ Number(this.location[1].toFixed(6)) }}
+				{{ this.location[0].toFixed(6) }} / 
+				{{ this.location[1].toFixed(6) }}
 			</h4>
 			<div v-else>
 				<h4>
@@ -61,8 +61,8 @@
 					<div v-else>
 						Message at coords:
 					</div>
-					{{ selected.message.location.coordinates[1] }} /
-					{{ selected.message.location.coordinates[0] }}<br><br>
+					{{ selected.message.location.coordinates[1].toFixed(6) }} /
+					{{ selected.message.location.coordinates[0].toFixed(6) }}<br><br>
 
 					<div class="text-center">
 						{{ selected.message.text }}
@@ -105,10 +105,10 @@
 								{{ messageText(message) }}
 							</td>
 							<td>
-								{{ message.location.coordinates[1] }}
+								{{ message.location.coordinates[1].toFixed(6) }}
 							</td>
 							<td>
-								{{ message.location.coordinates[0] }}
+								{{ message.location.coordinates[0].toFixed(6) }}
 							</td>
 						</tr>
 
@@ -397,7 +397,7 @@
 					// If the marker is not in the new near messages list,
 					// remove it from the map and from the nearMessagesMarkers array
 					var inMessages = this.messages.filter( (message) => {
-							return message._id === marker.messageId
+							return message._id === marker.messageId;
 						} )[0] || null;
 
 					if (!inMessages) {
@@ -506,8 +506,9 @@
 				});
 
 				// Add the newly generated markers to the marker cluster
-				mapData.markerCluster.clearMarkers();
+				//mapData.markerCluster.clearMarkers();
 				mapData.markerCluster.addMarkers(mapData.messagesMarkers);
+				console.log(mapData.messagesMarkers.length);
 				mapData.markerCluster.addMarkers(mapData.nearMessagesMarkers);
 
 			},
