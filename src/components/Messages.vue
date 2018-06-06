@@ -508,7 +508,6 @@
 				// Add the newly generated markers to the marker cluster
 				//mapData.markerCluster.clearMarkers();
 				mapData.markerCluster.addMarkers(mapData.messagesMarkers);
-				console.log(mapData.messagesMarkers.length);
 				mapData.markerCluster.addMarkers(mapData.nearMessagesMarkers);
 
 			},
