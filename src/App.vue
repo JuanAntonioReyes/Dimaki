@@ -5,8 +5,7 @@
 		</b-container>
     
     <b-container>
-      <!-- <router-view @loginLogout="onLoginLogout"></router-view> -->
-      <pp-profile></pp-profile>
+      <router-view @loginLogout="onLoginLogout"></router-view>
     </b-container>
     
 		<b-container fluid class="mt-4" tag="footer">
@@ -18,7 +17,6 @@
 <script>
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue';
-import Profile from './components/userProfile/Profile.vue';
 
 export default {
 
@@ -30,8 +28,7 @@ export default {
 
   components: {
     ppHeader: Header,
-    ppFooter: Footer,
-    ppProfile: Profile
+    ppFooter: Footer
   },
 
   mounted() {

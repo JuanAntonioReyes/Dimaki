@@ -8,12 +8,15 @@
 			</a>
 		</b-col>
 
-		<b-col sm="12" md="1" offset-md="3" class="text-center pt-3">
+		<b-col sm="12" md="2" offset-md="2" class="text-center pt-3">
 
 			<strong v-if="userLogged">
-				<router-link :to="{ name: 'messagesLink' }">
+				<router-link :to="{ name: 'userProfileLink' }">
+					Your profile
+				</router-link><br>
+				(<router-link :to="{ name: 'messagesLink' }">
 					<a href="" @click="logout">Logout</a>
-				</router-link>
+				</router-link>)
 			</strong>
 			<strong v-else>
 				<router-link :to="{ name: 'loginLink' }">

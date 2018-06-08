@@ -2,6 +2,7 @@ import Messages from './components/Messages.vue';
 import NewMessage from './components/NewMessage.vue';
 import Register from './components/Register.vue';
 import Login from './components/Login.vue';
+import UserProfile from './components/userProfile/Profile.vue';
 
 function checkLogged(to, from, next) {
 	var userToken = localStorage.getItem("userToken");
@@ -23,6 +24,9 @@ export const routes = [
 	},
 	{ path: '/login' , component: Login , name: 'loginLink' ,
 		beforeEnter: checkLogged
+	},
+	{ path: '/userProfile' , component: UserProfile , name: 'userProfileLink' ,
+		meta: { requiresAuth: true }
 	},
 	{ path: '*' , component: Messages }
 ];
