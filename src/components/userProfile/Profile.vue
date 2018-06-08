@@ -41,14 +41,19 @@
 		methods: {
 
 			async getUserData() {
-				// Get the user data
-				var response = await apiAccess.getLoggedUser();
 				
-				this.userData.name = response.data.name;
-				this.userData.email = response.data.email;
+				apiAccess.getLoggedUser()
+				.then((response) => {
+					this.userData.name = response.data.name;
+					this.userData.email = response.data.email;
 
-				var registerDate = new Date(response.data.registerDate);
-				this.userData.registerDate = registerDate.toLocaleDateString();
+					var registerDate = new Date(response.data.registerDate);
+					this.userData.registerDate = registerDate.toLocaleDateString();						
+				})
+				.catch((error) => {
+					this.$router.push({ name: 'messagesLink' });
+				});
+
 			}
 
   }
