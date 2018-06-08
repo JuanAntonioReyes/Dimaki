@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-		<b-container fluid class="mt-2 mb-3" tag="header">
+		<b-container fluid class="mt-2 mb-4" tag="header">
 			<pp-header :userLogged="userLogged" @logout="onLoginLogout"></pp-header>
 		</b-container>
     

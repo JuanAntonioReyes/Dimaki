@@ -1,8 +1,13 @@
 <template>
 <b-row class="text-center">
 
-	<b-col sm="12">
-		<h1>USER PROFILE</h1>
+	<b-col sm="12" md="6">
+		<h3>{{ this.userData.name }} ({{ this.userData.email }})</h3><br>
+		Registered since: {{ this.userData.registerDate }}
+	</b-col>
+
+	<b-col sm="12" md="6">
+		<pp-messages-list></pp-messages-list>
 	</b-col>
 
 </b-row>
@@ -10,6 +15,7 @@
 
 <script>
 	import apiAccess from '../../js/apiAccess.js';
+	import MessagesList from './MessagesList.vue';
 
 	export default {
 		data() {
@@ -18,10 +24,15 @@
 				userData: {
 					name: null,
 					email: null,
+					registerDate: null
 				}
 
 			}
 		},
+
+		components: {
+			ppMessagesList: MessagesList
+  	},
 
 		mounted() {
 			this.getUserData();
@@ -31,9 +42,13 @@
 
 			async getUserData() {
 				// Get the user data
-				var data = await apiAccess.getLoggedUser();
+				var response = await apiAccess.getLoggedUser();
 				
-				console.log(data);
+				this.userData.name = response.data.name;
+				this.userData.email = response.data.email;
+
+				var registerDate = new Date(response.data.registerDate);
+				this.userData.registerDate = registerDate.toLocaleDateString();
 			}
 
   }
