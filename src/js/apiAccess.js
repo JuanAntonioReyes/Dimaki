@@ -25,14 +25,13 @@ export default {
 
 	loginUser(params) {
 		return axiosInstance.post('api/loginUser', params);
-	}//,
+	},
 
-// NOT USED YET
-/*	getLoggedUser() {
+	getLoggedUser() {
 		userToken = localStorage.getItem('userToken');
 		axiosInstance.defaults.headers.common['x-access-token'] = userToken;
 
 		return axiosInstance.get('api/loggedUser');
-	}*/
+	}
 	
 }

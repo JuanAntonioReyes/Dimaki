@@ -23,9 +23,18 @@
 			}
 		},
 
+		mounted() {
+			this.getUserData();
+		},
+
 		methods: {
 
-
+			async getUserData() {
+				// Get the user data
+				var data = await apiAccess.getLoggedUser();
+				
+				console.log(data);
+			}
 
   }
 }
