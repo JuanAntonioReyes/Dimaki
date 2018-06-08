@@ -13,6 +13,13 @@ export default {
 		return axiosInstance.get(urlGet);
 	},
 
+	fetchUserMessages() {
+		userToken = localStorage.getItem('userToken');
+		axiosInstance.defaults.headers.common['x-access-token'] = userToken;
+
+		return axiosInstance.get('api/userMessages/');
+	},
+
 	addMessage(params) {
 		userToken = localStorage.getItem('userToken');
 		axiosInstance.defaults.headers.common['x-access-token'] = userToken;

@@ -2,8 +2,8 @@
 <b-row class="text-center">
 
 	<b-col sm="12" md="6">
-		<h3>{{ this.userData.name }} ({{ this.userData.email }})</h3><br>
-		Registered since: {{ this.userData.registerDate }}
+		<h3>{{ userData.name }} ({{ userData.email }})</h3><br>
+		Registered since: {{ userData.registerDate }}
 	</b-col>
 
 	<b-col sm="12" md="6">
