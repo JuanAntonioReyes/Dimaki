@@ -69,7 +69,7 @@
 </template>
 
 <script>
-	import apiAccess from '../apiAccess.js';
+	import apiAccess from '../js/apiAccess.js';
 
 	export default {
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-var config = require('../config/config.js');
+var config = require('../../config/config.js');
 var userToken;
 var axiosInstance = axios.create({ baseURL: config.apiUrl });
 

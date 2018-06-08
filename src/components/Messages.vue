@@ -138,7 +138,7 @@
 </template>
 
 <script>
-	import apiAccess from '../apiAccess.js';
+	import apiAccess from '../js/apiAccess.js';
 	import markerClusterer from '../js/vendor/markerclusterer.js';
 
 /*//====== POSITION CHANGE TESTING ==========
