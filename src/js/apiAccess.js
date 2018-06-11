@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 var config = require('../../config/config.js');
-var userToken;
 var axiosInstance = axios.create({ baseURL: config.apiUrl });
+
+function setHeaders() {
+	var userToken = localStorage.getItem('userToken');
+	axiosInstance.defaults.headers.common['x-access-token'] = userToken;
+}
 
 export default {
 
@@ -14,16 +18,18 @@ export default {
 	},
 
 	fetchUserMessages() {
-		userToken = localStorage.getItem('userToken');
-		axiosInstance.defaults.headers.common['x-access-token'] = userToken;
-
+		setHeaders();
 		return axiosInstance.get('api/userMessages/');
 	},
 
 	addMessage(params) {
-		userToken = localStorage.getItem('userToken');
-		axiosInstance.defaults.headers.common['x-access-token'] = userToken;
+		setHeaders();
 		return axiosInstance.post('api/messages', params);
+	},
+
+	deleteMessage(params) {
+		setHeaders();
+		return axiosInstance.delete('api/messages/' + params);
 	},
 
 	registerUser(params) {
@@ -35,9 +41,7 @@ export default {
 	},
 
 	getLoggedUser() {
-		userToken = localStorage.getItem('userToken');
-		axiosInstance.defaults.headers.common['x-access-token'] = userToken;
-
+		setHeaders();
 		return axiosInstance.get('api/loggedUser');
 	}
 	

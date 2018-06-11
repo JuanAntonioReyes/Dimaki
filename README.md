@@ -28,3 +28,4 @@ npm run dev
 - v1.0.0 (Basic functions, public messages, user login and registration)
 - v1.1.0 (All messages showing in map, marker clusters, out of range alert changed to modal)
 - v1.2.0 (Added user profile)
+- v1.3.0 (Now the users can delete their own messages)

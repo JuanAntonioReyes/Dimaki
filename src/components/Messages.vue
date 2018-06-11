@@ -11,6 +11,7 @@
 		</p>
 
 	</b-modal>
+	<!-- / Out of range message modal -->
 
 	<b-row class="text-center">
 		<b-col sm="12" class="mb-4">

@@ -1,68 +1,86 @@
 <template>
-<b-row class="text-center">
+<div class="userMessages">
+	<!-- Delete message modal -->
+	<b-modal ref="deleteMessageModal" title="Delete this message?" size="sm" centered header-bg-variant="danger"
+		header-text-variant="light" ok-variant="outline-danger" @ok="deleteMessage(selected.index)">
 
-	<b-col sm="12">
+		<p class="text-center">
+			ARE YOU SURE YOU WANT TO DELETE THIS MESSAGE?
+		</p>
 
-		<!-- MESSAGE DETAIL -->
-		<b-alert dismissible :show="showMessageDetail" @dismissed="toggleMessageDetail">
+	</b-modal>
+	<!-- / Delete message modal -->
 
-			<div v-if="selected.index === -1">
+	<b-row class="text-center">
 
-				<!-- In theory this will never show, but just in case -->
-				<div class="text-center">
-					NO MESSAGE SELECTED
+		<b-col sm="12">
+
+			<!-- MESSAGE DETAIL -->
+			<b-alert dismissible :show="showMessageDetail" @dismissed="toggleMessageDetail">
+
+				<div v-if="selected.index === -1">
+
+					<!-- In theory this will never show, but just in case -->
+					<div class="text-center">
+						NO MESSAGE SELECTED
+					</div>
+
 				</div>
+				<div v-else>
 
-			</div>
-			<div v-else>
+					<div>
+						Message from you at coords:
+					</div>
+					{{ selected.message.location.coordinates[1].toFixed(6) }} /
+					{{ selected.message.location.coordinates[0].toFixed(6) }}<br><br>
 
-				<div>
-					Message from you at coords:
+					<div class="text-center">
+						{{ selected.message.text }}
+					</div>
+
+					<br>
+
+					<div class="text-right">
+						<strong @click="showModal()">DELETE MESSAGE</strong>
+					</div>
 				</div>
-				{{ selected.message.location.coordinates[1].toFixed(6) }} /
-				{{ selected.message.location.coordinates[0].toFixed(6) }}<br><br>
+				
+			</b-alert>
+			<!-- /MESSAGE DETAIL -->
 
-				<div class="text-center">
-					{{ selected.message.text }}
-				</div>
+			<h4>YOUR MESSAGES</h4>
 
-			</div>
-			
-		</b-alert>
-		<!-- /MESSAGE DETAIL -->
+				<table id="userMessagesList" class="table table-hover">
 
-		<h4>YOUR MESSAGES</h4>
+				<thead class="thead-default">
+					<tr>
+						<th>Message</th>
+						<th>Latitude</th>
+						<th>Longitude</th>
+					</tr>
+				</thead>
 
-			<table id="userMessagesList" class="table table-hover">
+				<tbody v-for="(message, messageIndex) in userMessages">
 
-			<thead class="thead-default">
-				<tr>
-					<th>Message</th>
-					<th>Latitude</th>
-					<th>Longitude</th>
-				</tr>
-			</thead>
+					<tr @click="toggleMessageDetail(messageIndex)">
+						<td>
+							{{ messageText(message) }}
+						</td>
+						<td>
+							{{ message.location.coordinates[1].toFixed(6) }}
+						</td>
+						<td>
+							{{ message.location.coordinates[0].toFixed(6) }}
+						</td>
+					</tr>
 
-			<tbody v-for="(message, messageIndex) in userMessages">
+				</tbody>
 
-				<tr @click="toggleMessageDetail(messageIndex)">
-					<td>
-						{{ messageText(message) }}
-					</td>
-					<td>
-						{{ message.location.coordinates[1].toFixed(6) }}
-					</td>
-					<td>
-						{{ message.location.coordinates[0].toFixed(6) }}
-					</td>
-				</tr>
+			</table>
+		</b-col>
 
-			</tbody>
-
-		</table>
-	</b-col>
-
-</b-row>
+	</b-row>
+</div>
 </template>
 
 <script>
@@ -89,6 +107,10 @@
 		},
 
 		methods: {
+
+			showModal() {
+				this.$refs.deleteMessageModal.show();
+			},
 
 			messageText(message) {
 				if (message.text.length > 10) {
@@ -138,6 +160,27 @@
 				var prevStyle = messagesList[index].style;
 
 				prevStyle.background = backgroundColor;
+			},
+
+			deleteMessage(messageIndex) {
+				var messageId = this.userMessages[messageIndex]._id;
+
+				apiAccess.deleteMessage(messageId)
+					.then((response) => {
+						//this.$router.push({ name: 'userProfileLink' });
+					})
+					.catch((error) => {
+
+						if (error.response.data.message === "jwt expired") {
+
+							localStorage.removeItem("userToken");
+							
+							this.$emit('loginLogout', false);
+							this.$router.push({ name: 'loginLink' });
+
+						}
+
+					});
 			}
 
 		}
