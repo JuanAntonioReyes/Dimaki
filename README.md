@@ -10,7 +10,6 @@
 - Clone or download repository
 
 - Install the dependencies
-
 ```
 npm install
 ```
@@ -19,7 +18,6 @@ npm install
 
 ## Usage
 - Launch the project
-
 ```
 npm run dev
 ```
